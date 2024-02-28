@@ -13,7 +13,7 @@ machine. For more details on forking see the [GitHub
 Documentation](https://help.github.com/en/articles/fork-a-repo).
 
 ```cmd
-git clone https://github.com/DSCI-310-2024/DSCI-310-Project-Group-18.git
+git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git
 
 ```
 
