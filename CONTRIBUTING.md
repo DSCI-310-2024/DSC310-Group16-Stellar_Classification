@@ -4,7 +4,7 @@ We welcome any input, feedback, bug reports, and contributions via [DSCI310 2023
 GitHub Repository](http://github.com/DSCI-310-2024/DSCI-310-Group-16/).
 
 All contributions, suggestions, and feedback you submitted are accepted under the [Project's license](./LICENSE). You represent that if you do not own copyright in the code that you have the authority to submit it under the [Project's license](./LICENSE). All feedback, suggestions, or contributions are not confidential.
-## How To Contribute Code to Vega-Altair
+## How To Contribute Code to DSCI-310-Group-16
 
 ### Setting Up Your Environment
 
