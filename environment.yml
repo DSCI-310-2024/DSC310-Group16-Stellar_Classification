@@ -1,0 +1,11 @@
+name: dsci-310-group16
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyterlab
+  - matplotlib=3.8.3
+  - pandas=2.2.0
+  - python=3.12
+  - pyarrow=15.0.0
+prefix: C:\Users\VietNgo\miniconda3\envs\dsci-310-group16
