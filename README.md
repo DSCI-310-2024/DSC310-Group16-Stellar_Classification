@@ -1,6 +1,6 @@
 # DSCI_310-Group_16
 
-# Project Title: Star Spectral Type Predictor
+# Project Title: Stellar Classification Predictor
 
 Contributors: Aron Bahram, Olivia Lam, Lucy Liu, and Viet Ngo
 
