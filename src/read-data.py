@@ -1,65 +1,88 @@
-import click
+import glob
 import os
 from datetime import datetime
-import requests
+
+import click
 import pandas as pd
+import requests
+from traitlets import default
+
+
 # parse/define command line arguments here
 @click.command()
 @click.option('--url', type=str)
-@click.option('--output', type=str)
+@click.option('--output_path', type=str)
+def fetch_data(url, output_path):
+    """Download the data from the internet or read in the data from disk if it exists.
 
-# define main function
-def main(url, output):
+    Documentation for constructing a TPA call to retrieve the dataset:
+    https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS
+
+    Returns
+        df: DataFrame
+    """
     current_date = datetime.now().date().strftime("%Y-%m-%d")
 
-    # raw_data_dir = os.path.join("data")
-    # raw_data_path = os.path.join(raw_data_dir, f"{current_date}_planet-systems.csv")
+    dataset_name = "planet-systems"
+    raw_data_dir = os.path.join("data", "raw")
+    default_out_path = os.path.join(raw_data_dir, f"{current_date}_{dataset_name}.csv")
+    raw_data_path = output_path or default_out_path
+
     # make directory where we store our raw data
-    #os.makedirs(raw_data_dir, exist_ok=True)
+    os.makedirs(raw_data_dir, exist_ok=True)
 
     # check if we already have the dataset downloaded
-    if len(os.listdir(raw_data_dir)) != 0:
+    folder_not_empty = len(os.listdir(raw_data_dir)) != 0
+    raw_data_files = glob.glob(f"{raw_data_dir}/*{dataset_name}*")
+    if len(raw_data_files) > 0:
+        last_download_date = raw_data_files[0].split("_")[0].split("/")[-1]
+    else :
+        last_download_date = "0-0-0"
+    data_up2date = last_download_date == current_date
+
+    if folder_not_empty and data_up2date:
         print(len(os.listdir(raw_data_dir)))
         print(f"Using already existing dataset under {raw_data_dir}")
     else:
-        # download the raw data as CSV under the raw data directory
-        #url = "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/IceTable/nph-iceTblDownload"
-        
+        # remove outdated dataset file
+        [os.remove(file) for file in raw_data_files]
+
+        # download the raw data as CSV under the raw data directory using a TPA query
+        base_url = "https://exoplanetarchive.ipac.caltech.edu"
+        columns = (
+            "pl_name,"
+            "st_spectype,"
+            "sy_umagstr,"
+            "sy_gmagstr,"
+            "sy_rmagstr,"
+            "sy_imagstr,"
+            "sy_zmagstr"
+        )
+        query = f"select+{columns}+from+ps"
+        format = "csv"
+        url = url or f"{base_url}/TAP/sync?query={query}&format={format}"
+
         print(f"Downloading Planet Systems dataset from {url}")
 
-        # define an HTTP request
-        payload = {
-            "workspace": "2024.02.29_21.58.35_020450/TblView/2024.03.02_14.52.28_004142",
-            "useTimestamp": "1",
-            "table": "/exodata/kvmexoweb/ExoTables/PS.tbl",
-            "format": "CSV",
-            "user": "",
-            "label": "*",
-            "columns": "pl_name_display,st_spectype,sy_umagstr,sy_gmagstr,sy_rmagstr,sy_imagstr,sy_zmagstr",
-            "rows": "both",
-            "mission": "ExoplanetArchive"
-        }
-        response = requests.get(url, params=payload)
+        response = requests.get(url)
 
         # assume request was successfull and access the downloaded content    
         raw_data = response.content
 
         # write downloaded content into a file under the raw data directory
-        with open(output, "wb") as f:
+        with open(raw_data_path, "wb") as f:
             f.write(raw_data)
 
     # df holds the expolanet dataset as a DataFrame object
-    df = pd.read_csv(
-        output,
-        header = 23, # 24-1=23
-        dtype = {'pl_name' : 'string', 'st_spectype' : 'string'}
-    )
+    df = pd.read_csv(raw_data_path)
 
-    # remove columns in the dataset that have 'err' in their name
-    filtered_columns = [col for col in df.columns if 'err' not in col]
+    # remove confidence interval from all cells, just keep the mean value for these
+    df = df.apply(lambda col: col.str.split('&').str[0])
 
-    exoplanet_data = df[filtered_columns]
+    print("Successfully loaded the dataset.")
+
+    return df
 
 
 if __name__ == "__main__":
-    main() # pass any command line args to main here
+    exoplanet_data = fetch_data() # pass any command line args to main here
