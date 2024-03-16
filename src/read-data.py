@@ -46,7 +46,9 @@ def fetch_data(url, output_path) -> pd.DataFrame:
     # make directory where we store our raw data
     os.makedirs(raw_data_dir, exist_ok=True)
 
-    if not dataset_is_up2date(raw_data_dir, dataset_name):
+    up2date = dataset_is_up2date(raw_data_dir, dataset_name)
+
+    if not up2date:
         remove_outdated_files(raw_data_dir, dataset_name)
 
         # download the raw data as CSV under the raw data directory using a TPA query
@@ -80,26 +82,19 @@ def fetch_data(url, output_path) -> pd.DataFrame:
 
     print(f"Loaded dataset from {raw_data_path}")
 
+    if not up2date:
+        df = preprocess(df)
+
     return df
 
 def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     """Carry out some basic preprocessing steps on the dataset.
 
     The dataset is saved under data/processed/Y-M-D_planet-systems.csv
-    
-    Returns
-        df: DataFrame
     """
-    current_date = datetime.now().date().strftime("%Y-%m-%d")
     dataset_name = "planet-systems"
     dataset_dir = Path("data") / "processed"
-    dataset_path = dataset_dir / f"{current_date}_planet-systems.csv"
-
-    if dataset_is_up2date(dataset_dir, dataset_name):
-        print(f"Loaded dataset from {dataset_path}")
-        return df
-
-    remove_outdated_files(dataset_dir, dataset_name)
+    dataset_path = dataset_dir / f"{dataset_name}.csv"
 
     print("Preprocessing dataset...")
 
@@ -109,7 +104,7 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     # write dataframe as a csv file under data_path
     df.to_csv(dataset_path, index=False)
 
-    print(f"Saved dataset under {dataset_path}")
+    print(f"Saved preprocessed dataset under {dataset_path}")
 
     return df
 
@@ -119,7 +114,9 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
 @click.option('--output_path', type=str)
 def read_data(url, output_path):
     print(f"### Running {os.path.basename(__file__)} ###")
-    exoplanet_data = preprocess(fetch_data(url, output_path))
+
+    exoplanet_data = fetch_data(url, output_path)
+
     print(f"### Successfully ran {os.path.basename(__file__)} ###")
     return exoplanet_data
 
