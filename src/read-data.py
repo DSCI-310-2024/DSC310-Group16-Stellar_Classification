@@ -1,51 +1,55 @@
 import glob
 import os
 from datetime import datetime
+from pathlib import Path
 
 import click
 import pandas as pd
 import requests
-from traitlets import default
 
 
-# parse/define command line arguments here
-@click.command()
-@click.option('--url', type=str)
-@click.option('--output_path', type=str)
-def fetch_data(url, output_path):
+def dataset_is_up2date(dataset_dir, dataset_name) -> bool:
+    """Check if dataset is up to date, meaning it was downloaded today."""
+    current_date = datetime.now().date().strftime("%Y-%m-%d")
+    raw_data_files = glob.glob(f"{dataset_dir}/*{dataset_name}*")
+
+    if len(raw_data_files) > 0:
+        last_download_date = raw_data_files[0].split("_")[0].split("/")[-1]
+    else :
+        last_download_date = "0-0-0"
+
+    return last_download_date == current_date
+
+def remove_outdated_files(dataset_dir, dataset_name) -> list[str]:
+    """Remove outdated files that have the substring `dataset_name` in them."""
+    files = glob.glob(f"{dataset_dir}/*{dataset_name}*")
+    [os.remove(file) for file in files]
+    print(f"Removed outdated files:\n{files}") if len(files) > 0 else None
+    return files
+
+
+def fetch_data(url, output_path) -> pd.DataFrame:
     """Download the data from the internet or read in the data from disk if it exists.
+
+    The dataset is saved under data/raw/Y-M-D_planet-systems.csv.
 
     Documentation for constructing a TPA call to retrieve the dataset:
     https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS
-
-    Returns
-        df: DataFrame
     """
     current_date = datetime.now().date().strftime("%Y-%m-%d")
 
     dataset_name = "planet-systems"
-    raw_data_dir = os.path.join("data", "raw")
-    default_out_path = os.path.join(raw_data_dir, f"{current_date}_{dataset_name}.csv")
+    raw_data_dir = Path("data") / "raw"
+    default_out_path = raw_data_dir / f"{current_date}_{dataset_name}.csv"
     raw_data_path = output_path or default_out_path
 
     # make directory where we store our raw data
     os.makedirs(raw_data_dir, exist_ok=True)
 
-    # check if we already have the dataset downloaded
-    folder_not_empty = len(os.listdir(raw_data_dir)) != 0
-    raw_data_files = glob.glob(f"{raw_data_dir}/*{dataset_name}*")
-    if len(raw_data_files) > 0:
-        last_download_date = raw_data_files[0].split("_")[0].split("/")[-1]
-    else :
-        last_download_date = "0-0-0"
-    data_up2date = last_download_date == current_date
+    up2date = dataset_is_up2date(raw_data_dir, dataset_name)
 
-    if folder_not_empty and data_up2date:
-        print(len(os.listdir(raw_data_dir)))
-        print(f"Using already existing dataset under {raw_data_dir}")
-    else:
-        # remove outdated dataset file
-        [os.remove(file) for file in raw_data_files]
+    if not up2date:
+        remove_outdated_files(raw_data_dir, dataset_name)
 
         # download the raw data as CSV under the raw data directory using a TPA query
         base_url = "https://exoplanetarchive.ipac.caltech.edu"
@@ -62,7 +66,7 @@ def fetch_data(url, output_path):
         format = "csv"
         url = url or f"{base_url}/TAP/sync?query={query}&format={format}"
 
-        print(f"Downloading Planet Systems dataset from {url}")
+        print(f"Downloading Planet Systems dataset from {url}\nunder {raw_data_path}")
 
         response = requests.get(url)
 
@@ -76,13 +80,45 @@ def fetch_data(url, output_path):
     # df holds the expolanet dataset as a DataFrame object
     df = pd.read_csv(raw_data_path)
 
-    # remove confidence interval from all cells, just keep the mean value for these
+    print(f"Loaded dataset from {raw_data_path}")
+
+    if not up2date:
+        df = preprocess(df)
+
+    return df
+
+def preprocess(df: pd.DataFrame) -> pd.DataFrame:
+    """Carry out some basic preprocessing steps on the dataset.
+
+    The dataset is saved under data/processed/Y-M-D_planet-systems.csv
+    """
+    dataset_name = "planet-systems"
+    dataset_dir = Path("data") / "processed"
+    dataset_path = dataset_dir / f"{dataset_name}.csv"
+
+    print("Preprocessing dataset...")
+
+    # 1) remove confidence interval from all cells, just keep the mean value for these
     df = df.apply(lambda col: col.str.split('&').str[0])
 
-    print("Successfully loaded the dataset.")
+    # write dataframe as a csv file under data_path
+    df.to_csv(dataset_path, index=False)
+
+    print(f"Saved preprocessed dataset under {dataset_path}")
 
     return df
 
 
+@click.command()
+@click.option('--url', type=str)
+@click.option('--output_path', type=str)
+def read_data(url, output_path):
+    print(f"### Running {os.path.basename(__file__)} ###")
+
+    exoplanet_data = fetch_data(url, output_path)
+
+    print(f"### Successfully ran {os.path.basename(__file__)} ###")
+    return exoplanet_data
+
 if __name__ == "__main__":
-    exoplanet_data = fetch_data() # pass any command line args to main here
+    read_data()
