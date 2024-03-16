@@ -6,8 +6,6 @@ from pathlib import Path
 import click
 import pandas as pd
 import requests
-from matplotlib.pylab import exponential
-from traitlets import default
 
 
 def dataset_is_up2date(dataset_dir, dataset_name) -> bool:
