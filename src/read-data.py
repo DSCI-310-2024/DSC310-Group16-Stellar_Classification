@@ -4,10 +4,11 @@ from datetime import datetime
 from pathlib import Path
 
 import click
-from matplotlib.pylab import exponential
 import pandas as pd
 import requests
+from matplotlib.pylab import exponential
 from traitlets import default
+
 
 def dataset_is_up2date(dataset_dir, dataset_name) -> bool:
     """Check if dataset is up to date, meaning it was downloaded today."""
