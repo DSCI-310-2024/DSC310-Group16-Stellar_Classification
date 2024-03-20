@@ -1,4 +1,4 @@
-# This script will create a PNG, and the tables and corresponding box plots 
+# This script will create a PNG for our star count as well as the tables and corresponding box plots 
 # of the magnitudes of bands for each star
 
 # Imports
@@ -8,16 +8,16 @@ import matplotlib.pyplot as plt
 
 # Main function 
 @click.command()
-@click.argument('cleaned_data', type=str)
+@click.argument('cleaned_input_data', type=str)
 @click.argument('eda_png', type=str)
-@click.argument('csv_folder', type=str)
+@click.argument('eda_csv_folder', type=str)
 @click.argument('box_plot_folder', type=str)
 
 
-def main():
+def main(cleaned_input_data, eda_png, eda_csv_folder, box_plot_folder):
 
     #read data from cleaned data file
-    data = pd.read_csv(cleaned_data)
+    data = pd.read_csv(f'{cleaned_input_data}')
 
     #store the value counts as a DataFrame
     types_summ = pd.DataFrame(data["st_spectype"].value_counts())
