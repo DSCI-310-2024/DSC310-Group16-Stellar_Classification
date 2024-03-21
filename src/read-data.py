@@ -15,10 +15,11 @@ def dataset_is_up2date(dataset_dir, dataset_name) -> bool:
 
     if len(raw_data_files) > 0:
         last_download_date = raw_data_files[0].split("_")[0].split("/")[-1]
-    else :
+    else:
         last_download_date = "0-0-0"
 
     return last_download_date == current_date
+
 
 def remove_outdated_files(dataset_dir, dataset_name) -> list[str]:
     """Remove outdated files that have the substring `dataset_name` in them."""
@@ -71,7 +72,7 @@ def fetch_data(url, output_path) -> pd.DataFrame:
 
         response = requests.get(url)
 
-        # assume request was successfull and access the downloaded content    
+        # assume request was successfull and access the downloaded content
         raw_data = response.content
 
         # write downloaded content into a file under the raw data directory
@@ -88,6 +89,7 @@ def fetch_data(url, output_path) -> pd.DataFrame:
 
     return df
 
+
 def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     """Carry out some basic preprocessing steps on the dataset.
 
@@ -100,7 +102,7 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     print("Preprocessing dataset...")
 
     # 1) remove confidence interval from all cells, just keep the mean value for these
-    df = df.apply(lambda col: col.str.split('&').str[0])
+    df = df.apply(lambda col: col.str.split("&").str[0])
 
     # write dataframe as a csv file under data_path
     df.to_csv(dataset_path, index=False)
@@ -111,8 +113,8 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @click.command()
-@click.option('--url', type=str)
-@click.option('--output_path', type=str)
+@click.option("--url", type=str)
+@click.option("--output_path", type=str)
 def read_data(url, output_path):
     print(f"### Running {os.path.basename(__file__)} ###")
 
@@ -120,6 +122,7 @@ def read_data(url, output_path):
 
     print(f"### Successfully ran {os.path.basename(__file__)} ###")
     return exoplanet_data
+
 
 if __name__ == "__main__":
     read_data()
