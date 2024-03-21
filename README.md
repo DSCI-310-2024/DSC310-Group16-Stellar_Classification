@@ -42,9 +42,14 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 # Dependencies
 
-- `pandas`
-- `scikit-learn`
-- `matplotlib`
+  - `jupyterlab`
+  - `scikit-learn`
+  - `matplotlib`
+  - `click`
+  - `pandas`
+  - `python`
+  - `pyarrow`
+
 
 # License
 
