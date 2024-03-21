@@ -108,7 +108,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 ```
 
-## Reading the Dataset
+### Reading the Dataset
 
 We then download the dataset of interest; the Expoplanet Systems dataset
 from NASA, containing information about measurements of planets and
@@ -320,7 +320,7 @@ score from our scaled data with the RandomForestClassifier model of
 0.750 compared to LogisticRegression model of 0.694. However our
 accuracy score is quite low at 0.326.
 
-### Discussion
+## Discussion
 
 Our model yielded pretty average results with final overall accuracy of
 0.326. This model is not good enough for an automated stellar
