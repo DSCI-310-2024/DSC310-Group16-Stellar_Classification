@@ -19,9 +19,10 @@ logistic regression which uses photo metric measurements from telescopes
 to classify stars under the Morgan-Keenan system. Our final classifier
 performed poorly with final accuracy of **0.326** on testing data set
 with a tendency to classify stars as one class cooler than its actual
-class type. Our model can only classify stars into 4 main classes due to
-the small sample size. It is recommended that further study using larger
-sample sizes and methods to improve the classification model.
+class type. Our model can only classify stars into four main classes due
+to the small sample size. It is recommended that further study using
+larger sample sizes and methods to improve the classification model.
+
 
 ## Introduction
 
@@ -38,18 +39,19 @@ research, enables us to discern the chemical composition, temperature,
 and evolutionary stage of stars, galaxies, and other celestial bodies.
 In the earliest days it was based on mass and temperature; however, our
 modern classification system has evolved and we classify stars based on
-the Morgan–Keenan (MK) system (Morgan et al. 1943) which group stars
-into 7 classes based on their spectral characteristics. Under the MK
-system, astronomers analyse electromagnetic radiation from stars to
-determine its class. These electromagnetic spectrum have dark lines to
-determine which and how abundant elements are present in the star. The 7
-classes in the MK system - O, B, A, F, G, K, and M - are sequenced from
-the hottest (O type) to the coolest (K type) which also exhibits a
-certain characteristic that is very visible - colour. Hence in this
-report, we will classify stars using photometric data and in the
-Discussion section, we will evaluate whether this is a reliable
-alternative for the traditional method of comparing the best fit of the
-spectra to that of templates using statistical tests (Duan et al. 2009).
+the Morgan–Keenan (MK) system [@morgan1942atlas] which group stars into
+7 classes based on their spectral characteristics. Under the MK system,
+astronomers analyse electromagnetic radiation from stars to determine
+its class. These electromagnetic spectrum have dark lines to determine
+which and how abundant elements are present in the star. The seven classes
+in the MK system - O, B, A, F, G, K, and M - are sequenced from the
+hottest (O type) to the coolest (K type) which also exhibits a certain
+characteristic that is very visible - colour. Hence in this report, we
+will classify stars using photometric data and in the Discussion
+section, we will evaluate whether this is a reliable alternative for the
+traditional method of comparing the best fit of the spectra to that of
+templates using statistical tests [@duan2009automated].
+
 
 ### Definitions
 
@@ -57,13 +59,15 @@ spectra to that of templates using statistical tests (Duan et al. 2009).
 astronomical object's electromagnetic radiation
 
 The photo metric system we're using to classify star types is the
-*Sloan* system (add reference) used by the Sloan Digital Sky Survey. The
-system measures the intensity of electromagnetic radition from stars at
-5 bands: - *u* (345nm) - *g* (475nm which is a light blue in the visible
-spectrum) - *r* (622nm which is orange) - *i* (763nm which is deep
-red) - *z* (905nm)
+*Sloan* system [@kent1994sloan] used by the Sloan Digital Sky Survey.
+The system measures the intensity of electromagnetic radition from stars
+at 5 bands: - *u* (345nm) - *g* (475nm which is a light blue in the
+visible spectrum) - *r* (622nm which is orange) - *i* (763nm which is
+deep red) - *z* (905nm)
+
 
 ## Methods & Results
+
 
 ### Data
 
@@ -78,21 +82,21 @@ dataset](https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?a
 which has the columns of names, spectral type and measurements using
 Sloan photometric system selected.
 
-The Python programming language (Van Rossum and Drake, 2009) and the
-following Python packages were used to perform the analysis: matplotlib
-(Hunter, 2007), scikit-learn (Pedregosa et al., 2011) and Pandas
-(McKinney, 2010).
+The Python programming language [@van1995python] and the following
+Python packages were used to perform the analysis: `matplotlib`
+[@hunter2007matplotlib], `scikit-learn` [@pedregosa2011scikit] and `Pandas`
+[@mckinney2010data].
+
 
 ### Imports
 
 First of all, let's import the packages we will use to carry out the
 analysis and download the dataset. For our analysis we primarily used
-sklearn and pandas for our classification analysis as well as matplotlib
-for our visualizations.
+`sklearn` and `pandas` for our classification analysis as well as `matplotlib` for our visualizations.
 
+#!!!!!!!DELETE?
 ```{python}
 
-#I think we have to delete this??????
 import pandas as pd
 import requests
 import os
@@ -108,9 +112,10 @@ from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 ```
 
+
 ### Reading the Dataset
 
-We then download the dataset of interest; the Expoplanet Systems dataset
+We then download the dataset of interest: the Expoplanet Systems dataset
 from NASA, containing information about measurements of planets and
 stars. We are interested in the spectral type of stars given a subset of
 these measurements.
@@ -119,9 +124,10 @@ these measurements.
 #| label: tbl-read-data
 #| tbl-cap: Table of our Initial Data
 
-exoplanet_data = pd.read_csv("../data/raw/2024-03-20_planet-systems.csv")
+exoplanet_data = pd.read_csv("data/raw/2024-03-20_planet-systems.csv")
 Markdown(exoplanet_data.to_markdown(index = False))
 ```
+
 
 ## Data EDA and Wrangling
 
@@ -129,6 +135,7 @@ This dataset from NASA's Exoplanet Archive include all planets and
 stars. Therefore we will wrangle the dataset such that it only contain
 stars with Sloan magnitudes for photometric measurements.
 
+#!!!!!!! MAKEFILE?
 ```{python}
 # pre-process data
 only_stars_data = exoplanet_data.dropna(subset = ['st_spectype',
@@ -137,14 +144,14 @@ only_stars_data = exoplanet_data.dropna(subset = ['st_spectype',
                                                   'sy_rmag',
                                                   'sy_imag',
                                                   'sy_zmag'])
-only_stars_data.info #ok so i did not include this in the makefile
+only_stars_data.info 
 ```
 
 ```{python}
 #| label: tbl-cleaned-data
 #| tbl-cap: Table of our Cleaned Dataset
 
-cleaned_data = pd.read_csv("../data/processed/planet-systems.csv")
+cleaned_data = pd.read_csv("data/processed/planet-systems.csv")
 Markdown(cleaned_data.to_markdown(index = False))
 ```
 
@@ -155,7 +162,8 @@ preprocessing, but about 2200 rows contained NA values, so we thought it
 was best to simply drop them. This explains the drastic decrease in
 observations.
 
-### Variables:
+
+### Variable Descriptions:
 
 `st_spectype`: Classification of the star based on their spectral
 characteristics following the Morgan-Keenan system
@@ -175,79 +183,82 @@ Digital Sky Survey (SDSS) i band, in units of magnitudes
 `sy_zmag`: Brightness of the host star as measured using the Sloan
 Digital Sky Survey (SDSS) z band, in units of magnitudes
 
-![Histogram of the Value Counts of Our Star
-Types](../results/star_count_hist.png){#fig-star-count width="50%"}
+
+From our @fig-sy_umag visualization below we can see that our highest stellar value counts was for the *M* class, followed respectively by *K*, *G*, and *F*. 
+
+![`Histogram of Star Count Values`](results/figures/star_count_hist.png){#fig-sy_umag
+width="50%"}
+
+Now we will explore the features and boxplots of each band's magnitude for our four types of stellar classifications.
 
 ```{python}
 #| label: tbl-sy-umag
 #| tbl-cap: Table of sy_umag Features
 
-sy_umag = pd.read_csv("../results/sy_umag.csv!!!!!!!")
+sy_umag = pd.read_csv("results/figures/sy_umag.csv")
 Markdown(sy_umag.to_markdown(index = False))
 ```
 
-![Box Plot of `sy_umag`](../results/sy_umag.png){#fig-sy_umag
-width="50%"}
+![Box Plot of `sy_umag`](results/figures/sy_umag.png){#fig-sy_umag width="50%"}
 
-For *M*-class of stars, the magnitude of the *u*-band is much higher
-than the remaining classes at 17.3 at the median.
+From boxplot @fig-sy_umag, for *M*-class of stars, the magnitude of the *u*-band is much higher than the remaining classes at 17.3 at the median.
 
 ```{python}
 #| label: tbl-sy-gmag
 #| tbl-cap: Table of sy_gmag Features
 
-sy_gmag = pd.read_csv("../results/sy_gmag.csv")
+sy_gmag = pd.read_csv("results/figures/sy_gmag.csv")
 Markdown(sy_gmag.to_markdown(index = False))
 ```
 
-![Box Plot of `sy_gmag`](../results/sy_gmag.png){#fig-sy_gmag
+![Box Plot of `sy_gmag`](results/figures/sy_gmag.png){#fig-sy_gmag
 width="50%"}
 
-Again, for *M*-class of stars, the magnitude of the *g*-band is much
-higher than the remaining classes at 15.3 at the median.
+Again, from boxplot @fig-sy_gmag, for *M*-class of stars, the magnitude of the *g*-band is much higher than the remaining classes at 15.3 at the median.
 
 ```{python}
 #| label: tbl-sy-rmag
 #| tbl-cap: Table of sy_rmag Features
 
-sy_rmag = pd.read_csv("../results/sy_rmag.csv")
+sy_rmag = pd.read_csv("results/figures/sy_rmag.csv")
 Markdown(sy_rmag.to_markdown(index = False))
 ```
 
-![Box Plot of `sy_rmag`](../results/sy_rmag.png){#fig-sy_rmag
+![Box Plot of `sy_rmag`](results/figures/sy_rmag.png){#fig-sy_rmag
 width="50%"}
 
-Again, for *M*-class of stars, the magnitude of the *r*-band is higher
-than the remaining classes at 13.4 at the median.
+Again, from boxplot @fig-sy_rmag, for *M*-class of stars, the magnitude of the *r*-band is higher than the remaining classes at 13.4 at the median.
 
 ```{python}
 #| label: tbl-sy-imag
 #| tbl-cap: Table of sy_imag Features
 
-sy_imag = pd.read_csv("../results/sy_imag.csv")
+sy_imag = pd.read_csv("results/figures/sy_imag.csv")
 Markdown(sy_imag.to_markdown(index = False))
 ```
 
-![Box Plot of `sy_imag`](../results/sy_imag.png){#fig-sy_imag
+![Box Plot of `sy_imag`](results/figures/sy_imag.png){#fig-sy_imag
 width="50%"}
 
-For every class of stars, the magnitude at the *i*-band is similar.
+From boxplot @fig-sy_imag, for all classes of stars, the magnitude at the *i*-band is similar.
 
 ```{python}
 #| label: tbl-sy-zmag
 #| tbl-cap: Table of sy_zmag Features
 
-sy_zmag = pd.read_csv("../results/sy_zmag.csv")
+sy_zmag = pd.read_csv("results/figures/sy_zmag.csv")
 Markdown(sy_zmag.to_markdown(index = False))
 ```
 
-![Box Plot of `sy_zmag`](../results/sy_zmag.png){#fig-sy_zmag
+![Box Plot of `sy_zmag`](results/figures/sy_zmag.png){#fig-sy_zmag
 width="50%"}
 
-For every class of stars, the magnitude at the *i*-band is similar.
+From boxplot @fig-sy_zmag, for all classes of stars, the magnitude at the *i*-band is similar.
+
 
 ## Classification Analysis
 
+#!!!!!!!!! THIS NEEDS TO BE DONE MAKEFILE + EXPLANATION
 ```{python}
 #| label: tbl-describe_datset
 #| tbl-cap: Table of Dataset Features
@@ -270,48 +281,47 @@ We have a pretty spread out class with no major class imbalance.
 #| label: tbl-lr-cross_validate
 #| tbl-cap: Table of the Cross Validation Scores from Logistic Regression
 
-lr_cvs = pd.read_csv("../results/logistic_regression_df.csv!!!!!!!")
+lr_cvs = pd.read_csv("results/tables/logistic_regression_df.csv")
 Markdown(lr_cvs.to_markdown(index = False))
 ```
 
+
 ### Confusion Matrix
 
-One way to get a better understanding of the errors is by looking at -
-How well the classifier is identifying each class. - Which classes are
-most frequently confused with each other. - Overall accuracy, along with
-class-specific metrics like precision, recall, and F1-score for
-multi-class classification problems.
+One way to get a better understanding of the errors is by looking at how well the classifier is identifying each class. Which classes are most frequently confused with each other. Overall accuracy, along with class-specific metrics like precision, recall, and F1-score for multi-class classification problems.
 
-It's easier to demonstrate evaluation metrics using an explicit
-validation set instead of using cross-validation. So let's create a
-validation set.
+It's easier to demonstrate evaluation metrics using an explicit validation set instead of using cross-validation. So let's create a validation set as seen below in @tbl-confusion-matrix.
 
 ```{python}
 #| label: tbl-confusion-matrix
 #| tbl-cap: Table of the Logistic Regression Confusion Matrix
 
-lr_cm = pd.read_csv("../results/confusion_matrix.csv!!!!!!!")
+lr_cm = pd.read_csv("results/tables/confusion_matrix.csv")
 Markdown(lr_cm.to_markdown(index = False))
 ```
 
-![Visualization of Our Confusion
-Matrix](../results/confusion_matrix.png){#fig-cm width="50%"} #!!!!!!
+To better visualize our matrix, the visualization @fig-cm is given below:
 
-I do not have the table for cross_val_scores on here!!!!!!
+![Visualization of Our Confusion Matrix](results/figures/confusion_matrix.png){#fig-cm
+
+#!!!!!1I do not have the table for cross_val_scores on here
+
+We can now calculate our accuracy score given by @tbl-accuracy-score using our `Random Forest Classifier` given below.
 
 ```{python}
-#| label: tbl-accuracy score
+#| label: tbl-accuracy-score
 #| tbl-cap: Table of Accuracy Score From Random Forest Classifier
 
-rfc_accuracy = pd.read_csv("../results/confusion_matrix.csv!!!!!!!")
+rfc_accuracy = pd.read_csv("results/tables/confusion_matrix.csv")
 Markdown(rfc_accuracy.to_markdown(index = False))
 ```
 
+From this we can provide cross validation scores given in @tbl-rfc-cross_validate using our `Random Forest Classifier`.
 ```{python}
 #| label: tbl-rfc-cross_validate
 #| tbl-cap: Table of the Cross Validation Scores from Random Forest Classifier
 
-rfc_cvs = pd.read_csv("../results/logistic_regression_df.csv!!!!!!!")
+rfc_cvs = pd.read_csv("results/tables/logistic_regression_df.csv")
 Markdown(rfc_cvs.to_markdown(index = False))
 ```
 
@@ -319,44 +329,27 @@ Ultimately from our validation scores, we achieve a much higher test
 score from our scaled data with the RandomForestClassifier model of
 0.750 compared to LogisticRegression model of 0.694. However our
 accuracy score is quite low at 0.326.
+#!!!! FIX HARD INLINES 
+
 
 ## Discussion
 
 Our model yielded pretty average results with final overall accuracy of
 0.326. This model is not good enough for an automated stellar
 classification process. In addition, our model can only classify stars
-into 4 classes due to the limited sample size. However these 4 classes
-make up about 99.8% of stellar population (Ledrew, 2001) so being unable
-to classify stars into remaining 3 classes isn't as big of an issue.
-Looking at the confusion matrix, we can see that our model tend to
-classify stars as cooler than they actually are (e.g: 9 stars were
-classified as *G* but were actually *F* class). In order to improve this
-model, a larger sample size would help like using the Sloan Digital Sky
-Survey dataset instead. Another way to improve the model is to explore
-other classification methods such as k nearest neighbours. Finally,
-using another photometric system such as UBV could help since the bands
-are more seperated resulting in larger difference in magnitudes between
-star classes. More research into other classification methods could most
-likely yield higher accuracy.
+into four classes due to the limited sample size. However these four
+classes make up about 99.8% of stellar population [@ledrew2001real] so
+being unable to classify stars into remaining three classes isn't as big
+of an issue. Looking at the confusion matrix, we can see that our model
+tend to classify stars as cooler than they actually are (e.g: nine stars
+were classified as *G* but were actually *F* class). In order to improve
+this model, a larger sample size would help like using the Sloan Digital
+Sky Survey dataset instead. Another way to improve the model is to
+explore other classification methods such as k nearest neighbours.
+Finally, using another photometric system such as UBV could help since
+the bands are more seperated resulting in larger difference in
+magnitudes between star classes. More research into other classification
+methods could most likely yield higher accuracy.
+
 
 ## References
-
--   Morgan, W. W., Keenan, P. C., & Kellman, E. (1942). An atlas of
-    stellar spectra. University of Chicago.
--   Duan, F. Q., Liu, R., Guo, P., Zhou, M. Q., & Wu, F. C. (2009).
-    Automated spectral classification using template matching. Research
-    in Astronomy and Astrophysics, 9(3), 341.
--   Van Rossum, G., & Drake Jr, F. L. (1995). Python tutorial (Vol.
-    620). Amsterdam, The Netherlands: Centrum voor Wiskunde en
-    Informatica.
--   Hunter, J. D. (2007). Matplotlib: A 2D graphics environment.
-    Computing in science & engineering, 9(03), 90-95.
--   Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B.,
-    Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine
-    learning in Python. the Journal of machine Learning research, 12,
-    2825-2830.
--   McKinney, W. (2010, June). Data structures for statistical computing
-    in python. In Proceedings of the 9th Python in Science Conference
-    (Vol. 445, No. 1, pp. 51-56).
--   Ledrew, G. (2001). The real starry sky. Journal of the Royal
-    Astronomical Society of Canada, Vol. 95, p. 32, 95, 32.
