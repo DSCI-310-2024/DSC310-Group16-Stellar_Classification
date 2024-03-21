@@ -16,7 +16,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 2. Navigate to the Root of Your Project Directory:
    
-   `cd [insert project directory name]`
+   `cd DSCI-310-Group-16`
    
 3. Create and activate our Environment from its YAML File:
    
@@ -25,6 +25,20 @@ Our project looks towards the skies to classify stars to their given spectral ty
    `conda activate dsci-310-group16`
    
 5. Open Jupyterlab and Run the `spectral_type_classification` Notebook
+
+# Running the data analysis pipeline
+
+1. Clone our Repository from Github:
+   
+   `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
+
+2. Navigate to the Root of Your Project Directory:
+   
+   `cd DSCI-310-Group-16`
+
+3. Running the analysis, creating the results, figures and tables:
+
+   `make all`
 
 # Dependencies
 
