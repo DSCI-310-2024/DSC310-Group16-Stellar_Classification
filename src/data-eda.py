@@ -9,15 +9,13 @@ import matplotlib.pyplot as plt
 
 # Main function 
 @click.command()
-@click.argument('cleaned_input_data', type=str, default="data/processed/planet-systems.csv")
-@click.argument('eda_png_dir', type=str, default="results/figures")
-@click.argument('eda_csv_dir', type=str, default="results/figures")
-@click.argument('box_plot_dir', type=str, default="results/figures")
+@click.option('--cleaned_input_data', type=str, default="data/processed/planet-systems.csv")
+@click.option('--eda_png_dir', type=str, default="results/figures")
+@click.option('--eda_csv_dir', type=str, default="results/figures")
+@click.option('--box_plot_dir', type=str, default="results/figures")
 def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
     # create dirs if they don't exist
-    dirs = [eda_png_dir, eda_csv_dir, box_plot_dir]
-    for dir in dirs:
-        os.makedirs(dir, exist_ok=True)
+    [os.makedirs(dir, exist_ok=True) for dir in [eda_png_dir, eda_csv_dir, box_plot_dir]]
 
     #read data from cleaned data file
     data = pd.read_csv(f'{cleaned_input_data}')
