@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 # Main function 
 @click.command()
+<<<<<<< HEAD
 @click.argument('cleaned_input_data', type=str, default="data/processed/planet-systems.csv")
 @click.argument('eda_png_dir', type=str, default="results/figures")
 @click.argument('eda_csv_dir', type=str, default="results/figures")
@@ -18,6 +19,14 @@ def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
     dirs = [eda_png_dir, eda_csv_dir, box_plot_dir]
     for dir in dirs:
         os.makedirs(dir, exist_ok=True)
+=======
+@click.argument('cleaned_input_data', type=str)
+@click.argument('eda_png', type=str)
+@click.argument('eda_csv_folder', type=str)
+@click.argument('box_plot_folder', type=str)
+
+def main(cleaned_input_data, eda_png, eda_csv_folder, box_plot_folder):
+>>>>>>> 6f477ab (minor edits)
 
     #read data from cleaned data file
     data = pd.read_csv(f'{cleaned_input_data}')

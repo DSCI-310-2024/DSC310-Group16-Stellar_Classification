@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 @click.argument('results_csv_folder', type=str)
 @click.argument('confusion_matrix_png', type=str)
 
-
 def main(cleaned_input_data, x_train_output, x_test_output, results_csv_folder, confusion_matrix_png):
 
     #access data from cleaned data file
