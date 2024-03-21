@@ -2,15 +2,20 @@ import click
 import pandas as pd
 
 @click.command()
-@click.argument('input_file', type=str)
-@click.argument('output_file', type=str)
-
+@click.option('--input_file', type=str, default="data/processed/planet-systems.csv")
+@click.option('--output_file', type=str, default="data/processed/planet-systems.csv")
 def clean_data(input_file, output_file):
     """
     Reads data from the input file, performs data cleaning, and saves the cleaned data to the output file.
     """
     # Read the data from the input file
     exoplanet_data = pd.read_csv(input_file)
+
+    # iterate through the columns and rename if "str" is at the end of the column name
+    for col in exoplanet_data.columns:
+        if col.endswith('str'):
+            new_col_name = col[:-3]  # remove "str"
+            exoplanet_data.rename(columns={col: new_col_name}, inplace=True)
     
     # Drop the rows with NA values
     only_stars_data = exoplanet_data.dropna(subset = ['st_spectype',
@@ -29,7 +34,7 @@ def clean_data(input_file, output_file):
     # Save the cleaned data to the output file
     only_stars_data_copy.to_csv(output_file, index=False)
     
-    click.echo("Data cleaned and saved to:", output_file)
+    print("Data cleaned and saved to:", output_file)
 
 if __name__ == "__main__":
     clean_data()
