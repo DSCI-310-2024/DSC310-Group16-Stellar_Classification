@@ -2,14 +2,8 @@ import click
 import pandas as pd
 
 @click.command()
-<<<<<<< HEAD
 @click.option('--input_file', type=str, default="data/processed/planet-systems.csv")
 @click.option('--output_file', type=str, default="data/processed/planet-systems.csv")
-=======
-@click.argument('input_file', type=str)
-@click.argument('output_file', type=str)
-
->>>>>>> bb798c7 (Edited cleaned script)
 def clean_data(input_file, output_file):
     """
     Reads data from the input file, performs data cleaning, and saves the cleaned data to the output file.
