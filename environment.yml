@@ -6,6 +6,7 @@ dependencies:
   - jupyterlab
   - scikit-learn
   - matplotlib=3.8.3
+  - click
   - pandas=2.2.0
   - python=3.12
   - pyarrow=15.0.0
