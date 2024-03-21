@@ -10,7 +10,7 @@ def clean_data(input_file, output_file):
     Reads data from the input file, performs data cleaning, and saves the cleaned data to the output file.
     """
     # Read the data from the input file
-    data = pd.read_csv(input_file)
+    exoplanet_data = pd.read_csv(input_file)
     
     # Drop the rows with NA values
     only_stars_data = exoplanet_data.dropna(subset = ['st_spectype',
