@@ -87,7 +87,8 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     # Predict y values for the validation set
     predictions = pipe.predict(X_valid)
 
-    # Compare the predicted y values with actual y values of the validaiton set using the confusion matrix
+    # Compare the predicted y values with actual y values of the validaiton set using
+    # the confusion matrix
     cm = confusion_matrix(y_valid, predictions)
     pd.DataFrame(cm).to_csv(f"{results_csv_dir}/confusion_matrix.csv", index=False)
 
