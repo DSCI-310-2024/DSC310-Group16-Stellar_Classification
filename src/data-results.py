@@ -34,8 +34,9 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     # access data from cleaned data file
     only_stars_data = pd.read_csv(f"{cleaned_input_data}")
 
-    # should we include the following as a table? !!!!!
-    only_stars_data.describe(include="all")
+    # Create and save this as a table
+    describe = only_stars_data.describe(include="all")
+    pd.DataFrame(describe).to_csv(f"{results_csv_dir}/description_df.csv", index=False)
 
     # Setting y to our predicted variable: st_spectype
     y = only_stars_data["st_spectype"]
@@ -47,6 +48,9 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=123
     )
+
+    # Created and saved a y value count df
+    pd.DataFrame(y_train.value_counts(normalize=True)).to_csv(f"{results_csv_dir}/y-values_df.csv", index=False)
 
     # Logistic Regression cross validation and saved to csv
     pipe = make_pipeline(StandardScaler(), LogisticRegression())
