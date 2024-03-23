@@ -13,6 +13,8 @@ jupyter: python3
 editor: 
   markdown: 
     wrap: 72
+params:
+  echo: FALSE
 ---
 
 ## Summary
@@ -91,7 +93,6 @@ analysis and download the dataset. For our analysis we primarily used
 `sklearn` and `pandas` for our classification analysis as well as
 `matplotlib` for our visualizations.
 
-#!!!!!!!DELETE?
 
 ```{python}
 
@@ -325,8 +326,6 @@ rounded_acc = round(acc_value, 3)
 Markdown(rfc_accuracy.to_markdown(index = False))
 ```
 
-#!!! no cross_val_score
-
 From this we can provide cross validation scores given in
 @tbl-rfc-cross_validate using our `Random Forest Classifier`.
 
@@ -363,5 +362,6 @@ Finally, using another photometric system such as UBV could help since
 the bands are more seperated resulting in larger difference in
 magnitudes between star classes. More research into other classification
 methods could most likely yield higher accuracy.
+
 
 ## References
