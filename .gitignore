@@ -1,4 +1,5 @@
 *venv
+<<<<<<< HEAD
 # *data/raw
 # data/*/
 # results/*/
@@ -8,3 +9,8 @@
 # but include .qmd files under reports/
 # !reports/*.qmd
 # !reports/*.bib
+=======
+*data/raw
+data/*/
+results/*/
+>>>>>>> main
