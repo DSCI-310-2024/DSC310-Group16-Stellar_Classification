@@ -13,7 +13,7 @@ jupyter: python3
 editor: 
   markdown: 
     wrap: 72
-params:
+execute:
   echo: FALSE
 ---
 
@@ -22,7 +22,7 @@ params:
 In this report, we attempt to build a classification model using
 logistic regression which uses photo metric measurements from telescopes
 to classify stars under the Morgan-Keenan system. Our final classifier
-performed poorly with final accuracy of `{python} rounded_acc` on testing data set with a tendency to classify stars as one class cooler than its actual class type. Our model can only classify stars into four main classes due to the small sample size. It is recommended that further study using
+performed poorly with a low accuracy on testing data set with a tendency to classify stars as one class cooler than its actual class type. Our model can only classify stars into four main classes due to the small sample size. It is recommended that further study using
 larger sample sizes and methods to improve the classification model.
 
 ## Introduction
@@ -107,8 +107,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 import matplotlib.pyplot as plt
+from pathlib import Path
+from IPython.display import Markdown
 ```
 
 ### Reading the Dataset
@@ -119,65 +121,52 @@ stars. We are interested in the spectral type of stars given a subset of
 these measurements.
 
 ```{python}
-current_date = datetime.now().date().strftime("%Y-%m-%d")
-
-raw_data_dir = os.path.join("data", "raw")
-raw_data_path = os.path.join(raw_data_dir, f"{current_date}_planet-systems.csv")
+dataset_name = "planet-systems"
+raw_data_dir = Path("data") / "raw"
+default_out_path = raw_data_dir / f"{dataset_name}.csv"
+raw_data_path = default_out_path
 
 # make directory where we store our raw data
 os.makedirs(raw_data_dir, exist_ok=True)
 
-# check if we already have the dataset downloaded
-if len(os.listdir(raw_data_dir)) != 0:
-    print(len(os.listdir(raw_data_dir)))
-    print(f"Using already existing dataset under {raw_data_dir}")
-else:
-    # download the raw data as CSV under the raw data directory
-    url = "https://exoplanetarchive.ipac.caltech.edu/cgi-bin/IceTable/nph-iceTblDownload"
-    print(f"Downloading Planet Systems dataset from {url}")
+# download the raw data as CSV under the raw data directory using a TPA query
+base_url = "https://exoplanetarchive.ipac.caltech.edu"
+columns = (
+    "pl_name,"
+    "st_spectype,"
+    "sy_umagstr,"
+    "sy_gmagstr,"
+    "sy_rmagstr,"
+    "sy_imagstr,"
+    "sy_zmagstr"
+)
+query = f"select+{columns}+from+ps"
+format = "csv"
+url = f"{base_url}/TAP/sync?query={query}&format={format}"
 
-    # define an HTTP request
-    payload = {
-        "workspace": "2024.02.29_21.58.35_020450/TblView/2024.03.02_14.52.28_004142",
-        "useTimestamp": "1",
-        "table": "/exodata/kvmexoweb/ExoTables/PS.tbl",
-        "format": "CSV",
-        "user": "",
-        "label": "*",
-        "columns": "pl_name_display,st_spectype,sy_umagstr,sy_gmagstr,sy_rmagstr,sy_imagstr,sy_zmagstr",
-        "rows": "both",
-        "mission": "ExoplanetArchive"
-    }
-    response = requests.get(url, params=payload)
+print(f"Downloading Planet Systems dataset from {url}\nunder {raw_data_path}")
 
-    # assume request was successfull and access the downloaded content    
-    raw_data = response.content
+response = requests.get(url)
 
-    # write downloaded content into a file under the raw data directory
-    with open(raw_data_path, "wb") as f:
-        f.write(raw_data)
+# assume request was successfull and access the downloaded content
+raw_data = response.content
+
+# write downloaded content into a file under the raw data directory
+with open(raw_data_path, "wb") as f:
+    f.write(raw_data)
 
 # df holds the expolanet dataset as a DataFrame object
-df = pd.read_csv(
-    raw_data_path,
-    header = 23, # 24-1=23
-    dtype = {'pl_name' : 'string', 'st_spectype' : 'string'}
-)
+exoplanet_data = pd.read_csv(raw_data_path)
 
-# remove columns in the dataset that have 'err' in their name
-filtered_columns = [col for col in df.columns if 'err' not in col]
-
-exoplanet_data = df[filtered_columns]
-
-exoplanet_data
+print(f"Loaded dataset from {raw_data_path}")
 ```
 
 ```{python}
 #| label: tbl-read-data
 #| tbl-cap: Table of our Initial Data
 
-exoplanet_data = pd.read_csv("data/raw/2024-03-20_planet-systems.csv")
-Markdown(exoplanet_data.to_markdown(index = False))
+exoplanet_data = pd.read_csv("data/raw/planet-systems.csv")
+Markdown(exoplanet_data[:10].to_markdown(index = False))
 ```
 
 ## Data EDA and Wrangling
@@ -187,19 +176,45 @@ stars. Therefore we will wrangle the dataset such that it only contain
 stars with Sloan magnitudes for photometric measurements.
 
 ```{python}
-# pre-process data
-only_stars_data = exoplanet_data.dropna(subset = ['st_spectype',
-                                                  'sy_umag',
-                                                  'sy_gmag',
-                                                  'sy_rmag',
-                                                  'sy_imag',
-                                                  'sy_zmag'])
-# we are only interested in the first letter of spectral type, which becomes our y later
-only_stars_data_copy = only_stars_data.copy() # needed to avoid warning raised by pandas
-only_stars_data_copy["st_spectype"] = only_stars_data_copy['st_spectype'].transform(lambda x: x[0])
-only_stars_data_copy = only_stars_data_copy.loc[only_stars_data_copy['st_spectype'].isin(['O','B', 'A', 'F', 'G', 'K', 'M'])]
-only_stars_data_copy["st_spectype"] = only_stars_data_copy["st_spectype"].astype("category")
-only_stars_data = only_stars_data_copy
+print("### Cleaning and preprocessing dataset... ###")
+input_file = Path("data") / "raw" / "planet-systems.csv"
+output_file = Path("data") / "processed" / "planet-systems.csv"
+os.makedirs(Path(output_file).parent, exist_ok=True)
+# Read the data from the input file
+exoplanet_data = pd.read_csv(input_file)
+
+# 1) remove confidence interval from all cells, just keep the mean value for these
+exoplanet_data = exoplanet_data.apply(lambda col: col.str.split("&").str[0])
+
+# iterate through the columns and rename if "str" is at the end of the column name
+for col in exoplanet_data.columns:
+    if col.endswith("str"):
+        new_col_name = col[:-3]  # remove "str"
+        exoplanet_data.rename(columns={col: new_col_name}, inplace=True)
+
+# Drop the rows with NA values
+only_stars_data = exoplanet_data.dropna(
+    subset=["st_spectype", "sy_umag", "sy_gmag", "sy_rmag", "sy_imag", "sy_zmag"]
+)
+
+# Created column names with proper spectral type
+only_stars_data_copy = (
+    only_stars_data.copy()
+)  # needed to avoid warning raised by pandas
+only_stars_data_copy["st_spectype"] = only_stars_data_copy["st_spectype"].transform(
+    lambda x: x[0]
+)
+only_stars_data_copy = only_stars_data_copy.loc[
+    only_stars_data_copy["st_spectype"].isin(["O", "B", "A", "F", "G", "K", "M"])
+]
+only_stars_data_copy["st_spectype"] = only_stars_data_copy["st_spectype"].astype(
+    "category"
+)
+
+# Save the cleaned data to the output file
+only_stars_data_copy.to_csv(output_file, index=False)
+
+print("Data cleaned and saved to:", output_file)
 ```
 
 Below in @tbl-cleaned-data our preprocessing included dropping NA values from our `spec_type` and band star brightness features. We are also only interested in the first letter of the spectral type, which becomes our y value later in the analysis, so we modified that feature as well.
@@ -208,8 +223,8 @@ Below in @tbl-cleaned-data our preprocessing included dropping NA values from ou
 #| label: tbl-cleaned-data
 #| tbl-cap: Table of our Cleaned Dataset
 
-cleaned_data = pd.read_csv("data/processed/planet-systems.csv")
-Markdown(cleaned_data.to_markdown(index = False))
+only_stars_data = pd.read_csv("data/processed/planet-systems.csv")
+Markdown(only_stars_data[:10].to_markdown(index = False))
 ```
 
 **Note**: In order to run classification models on our dataset, we had
@@ -400,7 +415,7 @@ y_train.value_counts(normalize=True)
 #| label: tbl-y-train-test-values
 #| tbl-cap: Table of the y Value Counts of our Train-Test Split
 
-tts_value = pd.read_csv("results/tables/y_values")
+tts_value = pd.read_csv("results/tables/y-values_df.csv")
 Markdown(tts_value.to_markdown(index = False))
 ```
 
