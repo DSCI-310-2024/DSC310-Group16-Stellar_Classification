@@ -1,10 +1,10 @@
 *venv
-*data/raw
-data/*/
-results/*/
+# *data/raw
+# data/*/
+# results/*/
 
 # ignore everything under reports/
-reports/*
+# reports/*
 # but include .qmd files under reports/
-!reports/*.qmd
-!reports/*.bib
+# !reports/*.qmd
+# !reports/*.bib
