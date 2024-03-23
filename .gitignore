@@ -7,3 +7,4 @@ results/*/
 reports/*
 # but include .qmd files under reports/
 !reports/*.qmd
+!reports/*.bib

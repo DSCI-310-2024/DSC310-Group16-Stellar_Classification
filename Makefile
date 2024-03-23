@@ -98,11 +98,11 @@ clean : clean_data clean_results clean_eda clean_reports
 clean_all : clean
 
 
-render: reports/Spectral_type_classification_report.html
+report: reports/Spectral_type_classification_report.html
 
 reports/Spectral_type_classification_report.html : reports/Spectral_type_classification_report.qmd \
 data/processed/planet-systems.csv \
-data/raw/* \
+data/raw/planet-systems.csv  \
 results/tables/logistic_regression_df.csv \
 results/tables/random_forest_classifier_df.csv \
 results/tables/accuracy.csv \
@@ -121,5 +121,6 @@ results/figures/sy_imag.png \
 results/figures/sy_zmag.png 
 	quarto render reports/Spectral_type_classification_report.qmd
 
+# remove all files under reports except for ones with the extension .qmd and .bib
 clean_reports:
-	find reports ! -name '*.qmd' -type f -exec rm -f {} +
+	find reports ! -name '*.qmd' ! -name '*.bib' -type f -exec rm -f {} +

@@ -126,7 +126,7 @@ these measurements.
 #| label: tbl-read-data
 #| tbl-cap: Table of our Initial Data
 
-exoplanet_data = pd.read_csv("data/raw/planet-systems.csv")
+exoplanet_data = pd.read_csv("../data/raw/planet-systems.csv")
 Markdown(exoplanet_data[:10].to_markdown(index = False))
 ```
 
@@ -142,7 +142,7 @@ Below in @tbl-cleaned-data our preprocessing included dropping NA values from ou
 #| label: tbl-cleaned-data
 #| tbl-cap: Table of our Cleaned Dataset
 
-only_stars_data = pd.read_csv("data/processed/planet-systems.csv")
+only_stars_data = pd.read_csv("../data/processed/planet-systems.csv")
 Markdown(only_stars_data[:10].to_markdown(index = False))
 ```
 
