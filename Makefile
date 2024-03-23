@@ -93,14 +93,14 @@ clean_eda :
 	rm -f results/figures/sy_imag.png
 	rm -f results/figures/sy_zmag.png
 
-clean : clean_data clean_results clean_eda
+clean : clean_data clean_results clean_eda clean_reports
 
 clean_all : clean
 
 
-render: report/Spectral_type_classification_report.html
+render: reports/Spectral_type_classification_report.html
 
-report/Spectral_type_classification_report.html : Spectral_type_classification_report.qmd \
+reports/Spectral_type_classification_report.html : reports/Spectral_type_classification_report.qmd \
 data/processed/planet-systems.csv \
 data/raw/* \
 results/tables/logistic_regression_df.csv \
@@ -118,5 +118,8 @@ results/figures/sy_umag.png \
 results/figures/sy_gmag.png \
 results/figures/sy_rmag.png \
 results/figures/sy_imag.png \
-results/figures/sy_zmag.png \
-	quarto render report/Spectral_type_classification_report.qmd
+results/figures/sy_zmag.png 
+	quarto render reports/Spectral_type_classification_report.qmd
+
+clean_reports:
+	find reports ! -name '*.qmd' -type f -exec rm -f {} +
