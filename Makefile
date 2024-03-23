@@ -14,7 +14,7 @@
 #
 # make all
 
-all: download preprocess eda results
+all: download preprocess eda results render
 
 
 download: data/raw/planet-systems.csv
