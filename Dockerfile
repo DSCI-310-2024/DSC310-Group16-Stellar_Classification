@@ -25,3 +25,10 @@ WORKDIR /home/dsci/DSCI310-Group16-Stellar_Classification
 
 # carry out the analysis
 RUN make all
+
+# install a PDF viewer
+RUN apt-get update && \
+    apt-get install -y evince
+
+# open the PDF file with the PDF viewer
+CMD ["evince", "reports/Spectral_type_classification_report.pdf"]
