@@ -2,3 +2,8 @@
 *data/raw
 data/*/
 results/*/
+
+# ignore everything under reports/
+reports/*
+# but include .qmd files under reports/
+!reports/*.qmd
