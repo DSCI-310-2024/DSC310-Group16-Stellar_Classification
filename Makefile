@@ -3,7 +3,7 @@
 # example usage:
 # make all
 
-all: data preprocess eda results
+all: data/processed/planet-systems.csv preprocess eda results
 
 data/processed/planet-systems.csv : src/read-data.py 
 	python src/read-data.py
