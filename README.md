@@ -8,7 +8,23 @@ Contributors: Aron Bahram, Olivia Lam, Lucy Liu, and Viet Ngo
 
 Our project looks towards the skies to classify stars to their given spectral types according to their different electromagnetic radiation magnitudes. Our goal is to expand our understanding of stars through their five radiation band types, and explore how data analysis can further our knowledge beyond our galaxy through the study of photometry, dynamics of celestial bodies, and stellar interactions. Our research comes from a data set on planetary systems from NASA’s Exoplanet Archive. Our simple categorization of stars may seem small, but it contributes to the bigger pursuit of celestial research and perhaps even planetary exploration.
 
-# How to Run Our Analysis
+# Reproducing the results in a docker container
+
+1. Clone our Repository from Github:
+   
+   `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
+
+2. Build the docker image called "dsci310-group16" from the Dockerfile:
+
+   `docker build -t dsci310-group16`
+
+3. Run the container:
+
+   `docker run --rm -it dsci310-group16`
+
+4. The generated report will show up as PDF
+
+# Contributing to the codebase
 
 1. Clone our Repository from Github:
    
@@ -24,33 +40,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
    
    `conda activate dsci-310-group16`
    
-5. Open Jupyterlab and Run the `spectral_type_classification` Notebook
-
-# Running the data analysis pipeline
-
-1. Clone our Repository from Github:
-   
-   `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
-
-2. Navigate to the Root of Your Project Directory:
-   
-   `cd DSCI-310-Group-16`
-
-3. Running the analysis, creating the results, figures and tables:
-
-   `make all`
-
-# Shifting to a docker container as the computational environment
-
-1. Build the docker image called "dsci310-group16" from the Dockerfile:
-
-   `docker build -t dsci310-group16`
-
-2. Run the container:
-
-   `docker run --rm -it dsci310-group16`
-
-3. Run your experiments inside the container as you would do it locally
+5. Execute desired edits on a separate branch and create a pull request.
 
 # Dependencies
 
@@ -61,10 +51,9 @@ Our project looks towards the skies to classify stars to their given spectral ty
   - `pandas`
   - `python`
   - `pyarrow`
+  - `tabulate`
 
 
 # License
 
 Our project is licensed under the MIT License and is provided under file: LICENSE
-
-
