@@ -14,11 +14,7 @@
 #
 # make all
 
-<<<<<<< HEAD
-all: download preprocess eda results report
-=======
-all: download preprocess eda results
->>>>>>> main
+all : download preprocess eda results report
 
 
 download: data/raw/planet-systems.csv
@@ -97,28 +93,16 @@ clean_eda :
 	rm -f results/figures/sy_imag.png
 	rm -f results/figures/sy_zmag.png
 
-<<<<<<< HEAD
 clean : clean_data clean_results clean_eda clean_reports
-=======
-clean : clean_data clean_results clean_eda
->>>>>>> main
 
 clean_all : clean
 
 
-<<<<<<< HEAD
 report: reports/Spectral_type_classification_report.html
 
 reports/Spectral_type_classification_report.html : reports/Spectral_type_classification_report.qmd \
 data/processed/planet-systems.csv \
 data/raw/planet-systems.csv  \
-=======
-render: report/Spectral_type_classification_report.html
-
-report/Spectral_type_classification_report.html : Spectral_type_classification_report.qmd \
-data/processed/planet-systems.csv \
-data/raw/* \
->>>>>>> main
 results/tables/logistic_regression_df.csv \
 results/tables/random_forest_classifier_df.csv \
 results/tables/accuracy.csv \
@@ -134,14 +118,9 @@ results/figures/sy_umag.png \
 results/figures/sy_gmag.png \
 results/figures/sy_rmag.png \
 results/figures/sy_imag.png \
-<<<<<<< HEAD
 results/figures/sy_zmag.png 
 	quarto render reports/Spectral_type_classification_report.qmd
 
 # remove all files under reports except for ones with the extension .qmd and .bib
 clean_reports:
 	find reports ! -name '*.qmd' ! -name '*.bib' -type f -exec rm -f {} +
-=======
-results/figures/sy_zmag.png \
-	quarto render report/Spectral_type_classification_report.qmd
->>>>>>> main
