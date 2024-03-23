@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.4.545" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<meta name="author" content="Olivia Lam, Aron Braham, Lucy Liu, and Viet Ngo" />
+
+<title>Stellar Classification using Photometric data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" data-relocate-top="true"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <div id="quarto-toc-target"></div>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Stellar Classification using Photometric data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Olivia Lam, Aron Braham, Lucy Liu, and Viet Ngo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary">Summary</a></li>
+  <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+  <li><a href="#methods-results" id="toc-methods-results">Methods &amp; Results</a></li>
+  <li><a href="#data-eda-and-wrangling" id="toc-data-eda-and-wrangling">Data EDA and Wrangling</a></li>
+  <li><a href="#classification-analysis" id="toc-classification-analysis">Classification Analysis</a></li>
+  <li><a href="#discussion" id="toc-discussion">Discussion</a></li>
+  <li><a href="#references" id="toc-references">References</a></li>
+  </ul>
+</nav>
+<section id="summary" class="level2">
+<h2>Summary</h2>
+<p>In this report, we attempt to build a classification model using logistic regression which uses photo metric measurements from telescopes to classify stars under the Morgan-Keenan system. Our final classifier performed poorly with a low accuracy on testing data set with a tendency to classify stars as one class cooler than its actual class type. Our model can only classify stars into four main classes due to the small sample size. It is recommended that further study using larger sample sizes and methods to improve the classification model.</p>
+</section>
+<section id="introduction" class="level2">
+<h2>Introduction</h2>
+<p>Current and future astronomical surveys will observe hundred of thousands of objects each year. Due to the massive amount of spectroscopic and photometric data produced, an automated stellar classification process has become important in the field of astronomy in the past few years.</p>
+<p>In astronomy, understanding the spectral characteristics of celestial objects serves as a fundamental pillar for unraveling the mysteries of the cosmos. Spectral classification, a cornerstone of astronomical research, enables us to discern the chemical composition, temperature, and evolutionary stage of stars, galaxies, and other celestial bodies. In the earliest days it was based on mass and temperature; however, our modern classification system has evolved and we classify stars based on the Morgan–Keenan (MK) system <span class="citation" data-cites="morgan1942atlas">(<a href="#ref-morgan1942atlas" role="doc-biblioref">Morgan, Keenan, and Kellman 1942</a>)</span> which group stars into 7 classes based on their spectral characteristics. Under the MK system, astronomers analyse electromagnetic radiation from stars to determine its class. These electromagnetic spectrum have dark lines to determine which and how abundant elements are present in the star. The seven classes in the MK system - O, B, A, F, G, K, and M - are sequenced from the hottest (O type) to the coolest (K type) which also exhibits a certain characteristic that is very visible - colour. Hence in this report, we will classify stars using photometric data and in the Discussion section, we will evaluate whether this is a reliable alternative for the traditional method of comparing the best fit of the spectra to that of templates using statistical tests <span class="citation" data-cites="duan2009automated">(<a href="#ref-duan2009automated" role="doc-biblioref">Duan et al. 2009</a>)</span>.</p>
+<section id="definitions" class="level3">
+<h3>Definitions</h3>
+<p><strong>Photometry</strong>: the measurement of the flux or intensity of an astronomical object’s electromagnetic radiation</p>
+<p>The photo metric system we’re using to classify star types is the <em>Sloan</em> system <span class="citation" data-cites="kent1994sloan">(<a href="#ref-kent1994sloan" role="doc-biblioref">Kent 1994</a>)</span> used by the Sloan Digital Sky Survey. The system measures the intensity of electromagnetic radition from stars at 5 bands: - <em>u</em> (345nm) - <em>g</em> (475nm which is a light blue in the visible spectrum) - <em>r</em> (622nm which is orange) - <em>i</em> (763nm which is deep red) - <em>z</em> (905nm)</p>
+</section>
+</section>
+<section id="methods-results" class="level2">
+<h2>Methods &amp; Results</h2>
+<section id="data" class="level3">
+<h3>Data</h3>
+<p>This report has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program. NASA Exoplanet Archive collects data from various sources, including ground-based observatories and space telescopes such as the Kepler Space Telescope and the Transiting Exoplanet Survey Satellite (TESS). The dataset is we’re using is their <a href="https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&amp;config=PS">Planetary Systems dataset</a> which has the columns of names, spectral type and measurements using Sloan photometric system selected.</p>
+<p>The Python programming language <span class="citation" data-cites="van1995python">(<a href="#ref-van1995python" role="doc-biblioref">Van Rossum and Drake Jr 1995</a>)</span> and the following Python packages were used to perform the analysis: <code>matplotlib</code> <span class="citation" data-cites="hunter2007matplotlib">(<a href="#ref-hunter2007matplotlib" role="doc-biblioref">Hunter 2007</a>)</span>, <code>scikit-learn</code> <span class="citation" data-cites="pedregosa2011scikit">(<a href="#ref-pedregosa2011scikit" role="doc-biblioref">Pedregosa et al. 2011</a>)</span> and <code>Pandas</code> <span class="citation" data-cites="mckinney2010data">(<a href="#ref-mckinney2010data" role="doc-biblioref">McKinney et al. 2010</a>)</span>.</p>
+</section>
+<section id="imports" class="level3">
+<h3>Imports</h3>
+<p>First of all, let’s import the packages we will use to carry out the analysis and download the dataset. For our analysis we primarily used <code>sklearn</code> and <code>pandas</code> for our classification analysis as well as <code>matplotlib</code> for our visualizations.</p>
+</section>
+<section id="reading-the-dataset" class="level3">
+<h3>Reading the Dataset</h3>
+<p>We then download the dataset of interest: the Expoplanet Systems dataset from NASA, containing information about measurements of planets and stars. We are interested in the spectral type of stars given a subset of these measurements.</p>
+<div class="cell" data-execution_count="2">
+<div id="tbl-read-data" class="cell quarto-float" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-read-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 1: Table of our Initial Data
+</figcaption>
+<div aria-describedby="tbl-read-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="2">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 15%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">pl_name</th>
+<th style="text-align: left;">st_spectype</th>
+<th style="text-align: right;">sy_umagstr</th>
+<th style="text-align: right;">sy_gmagstr</th>
+<th style="text-align: right;">sy_rmagstr</th>
+<th style="text-align: right;">sy_imagstr</th>
+<th style="text-align: right;">sy_zmagstr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OGLE-TR-10 b</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BD-08 2823 b</td>
+<td style="text-align: left;">K3 V</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BD-08 2823 c</td>
+<td style="text-align: left;">K3 V</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR 8799 c</td>
+<td style="text-align: left;">A5 V</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HD 104985 b</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4 UMa b</td>
+<td style="text-align: left;">K1 III</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HD 104985 b</td>
+<td style="text-align: left;">G9 III</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kap CrB b</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">kap CrB b</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kap CrB b</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="data-eda-and-wrangling" class="level2">
+<h2>Data EDA and Wrangling</h2>
+<p>This dataset from NASA’s Exoplanet Archive include all planets and stars. Therefore we will wrangle the dataset such that it only contain stars with Sloan magnitudes for photometric measurements.</p>
+<p>Below in <a href="#tbl-cleaned-data" class="quarto-xref">Table 2</a> our preprocessing included dropping NA values from our <code>spec_type</code> and band star brightness features. We are also only interested in the first letter of the spectral type, which becomes our y value later in the analysis, so we modified that feature as well.</p>
+<div class="cell" data-execution_count="3">
+<div id="tbl-cleaned-data" class="cell quarto-float" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cleaned-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 2: Table of our Cleaned Dataset
+</figcaption>
+<div aria-describedby="tbl-cleaned-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="3">
+<table class="do-not-create-environment cell" style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">pl_name</th>
+<th style="text-align: left;">st_spectype</th>
+<th style="text-align: right;">sy_umag</th>
+<th style="text-align: right;">sy_gmag</th>
+<th style="text-align: right;">sy_rmag</th>
+<th style="text-align: right;">sy_imag</th>
+<th style="text-align: right;">sy_zmag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TOI-2084 b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">18.6919</td>
+<td style="text-align: right;">16.0801</td>
+<td style="text-align: right;">14.6494</td>
+<td style="text-align: right;">17.9112</td>
+<td style="text-align: right;">13.2406</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TOI-1801 b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">16.4486</td>
+<td style="text-align: right;">12.6586</td>
+<td style="text-align: right;">11.0055</td>
+<td style="text-align: right;">10.2729</td>
+<td style="text-align: right;">10.7555</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K2-133 c</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">17.2832</td>
+<td style="text-align: right;">15.2645</td>
+<td style="text-align: right;">13.6265</td>
+<td style="text-align: right;">12.9151</td>
+<td style="text-align: right;">12.7195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">K2-133 e</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">17.2832</td>
+<td style="text-align: right;">15.2645</td>
+<td style="text-align: right;">13.6265</td>
+<td style="text-align: right;">12.9151</td>
+<td style="text-align: right;">12.7195</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K2-133 d</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">17.2832</td>
+<td style="text-align: right;">15.2645</td>
+<td style="text-align: right;">13.6265</td>
+<td style="text-align: right;">12.9151</td>
+<td style="text-align: right;">12.7195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TOI-3785 b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">17.9187</td>
+<td style="text-align: right;">15.4753</td>
+<td style="text-align: right;">14.0744</td>
+<td style="text-align: right;">13.2233</td>
+<td style="text-align: right;">12.4056</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TOI-3984 A b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">19.1895</td>
+<td style="text-align: right;">16.5597</td>
+<td style="text-align: right;">15.1645</td>
+<td style="text-align: right;">13.9346</td>
+<td style="text-align: right;">13.2853</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TOI-1853 b</td>
+<td style="text-align: left;">K</td>
+<td style="text-align: right;">15.5075</td>
+<td style="text-align: right;">14.9806</td>
+<td style="text-align: right;">11.9848</td>
+<td style="text-align: right;">11.7529</td>
+<td style="text-align: right;">11.8545</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wolf 327 b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">16.6342</td>
+<td style="text-align: right;">15.6776</td>
+<td style="text-align: right;">14.839</td>
+<td style="text-align: right;">14.9466</td>
+<td style="text-align: right;">11.0601</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HD 81688 b</td>
+<td style="text-align: left;">K</td>
+<td style="text-align: right;">13.0932</td>
+<td style="text-align: right;">10.9213</td>
+<td style="text-align: right;">9.31906</td>
+<td style="text-align: right;">8.71834</td>
+<td style="text-align: right;">7.85169</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Note</strong>: In order to run classification models on our dataset, we had to remove the NA values from our magnitudes. We were planning to incorporate <code>SimpleImputer()</code> into our pipeline during data preprocessing, but about 2200 rows contained NA values, so we thought it was best to simply drop them. This explains the drastic decrease in observations.</p>
+<section id="variable-descriptions" class="level3">
+<h3>Variable Descriptions:</h3>
+<p><code>st_spectype</code>: Classification of the star based on their spectral characteristics following the Morgan-Keenan system</p>
+<p><code>sy_umag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) u band, in units of magnitudes</p>
+<p><code>sy_gmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) g band, in units of magnitudes</p>
+<p><code>sy_rmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) r band, in units of magnitudes</p>
+<p><code>sy_imag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) i band, in units of magnitudes</p>
+<p><code>sy_zmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) z band, in units of magnitudes</p>
+<p>From our <a href="#fig-sy-umag" class="quarto-xref">Figure 1</a> visualization below we can see that our highest stellar value counts was for the <em>M</em> class, followed respectively by <em>K</em>, <em>G</em>, and <em>F</em>.</p>
+<div id="fig-sy-umag" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/star_count_hist.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1: <code>Histogram of Star Count Values</code>
+</figcaption>
+</figure>
+</div>
+<p>Now we will explore the features and boxplots of each band’s magnitude for our four types of stellar classifications.</p>
+<div class="cell" data-execution_count="4">
+<div id="tbl-sy-umag" class="cell quarto-float" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 3: Table of sy_umag Features
+</figcaption>
+<div aria-describedby="tbl-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="4">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: left;">sy_umag</th>
+<th style="text-align: left;">sy_umag.1</th>
+<th style="text-align: left;">sy_umag.2</th>
+<th style="text-align: left;">sy_umag.3</th>
+<th style="text-align: left;">sy_umag.4</th>
+<th style="text-align: left;">sy_umag.5</th>
+<th style="text-align: left;">sy_umag.6</th>
+<th style="text-align: left;">sy_umag.7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">count</td>
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">std</td>
+<td style="text-align: left;">min</td>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">75%</td>
+<td style="text-align: left;">max</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">st_spectype</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">38.0</td>
+<td style="text-align: left;">15.006642105263154</td>
+<td style="text-align: left;">0.766401328650734</td>
+<td style="text-align: left;">13.7542</td>
+<td style="text-align: left;">14.7063</td>
+<td style="text-align: left;">14.8961</td>
+<td style="text-align: left;">15.2332</td>
+<td style="text-align: left;">17.9494</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">102.0</td>
+<td style="text-align: left;">15.184445098039218</td>
+<td style="text-align: left;">0.5159733968557502</td>
+<td style="text-align: left;">13.9531</td>
+<td style="text-align: left;">15.005849999999999</td>
+<td style="text-align: left;">15.166</td>
+<td style="text-align: left;">15.4862</td>
+<td style="text-align: left;">16.9794</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K</td>
+<td style="text-align: left;">112.0</td>
+<td style="text-align: left;">15.60805535714286</td>
+<td style="text-align: left;">0.8534817900324461</td>
+<td style="text-align: left;">13.0932</td>
+<td style="text-align: left;">15.0413</td>
+<td style="text-align: left;">15.56765</td>
+<td style="text-align: left;">15.8447</td>
+<td style="text-align: left;">17.9905</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">121.0</td>
+<td style="text-align: left;">17.467182644628096</td>
+<td style="text-align: left;">1.812482452589895</td>
+<td style="text-align: left;">14.5112</td>
+<td style="text-align: left;">15.7198</td>
+<td style="text-align: left;">17.2832</td>
+<td style="text-align: left;">19.1895</td>
+<td style="text-align: left;">21.2975</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img src="../results/figures/sy_umag.png" class="img-fluid" style="width:90.0%" /></p>
+<figcaption>Box Plot of <code>fig-sy-umag</code></figcaption>
+</figure>
+</div>
+<p>From boxplot <a href="#fig-sy-umag" class="quarto-xref">Figure 1</a>, for <em>M</em>-class of stars, the magnitude of the <em>u</em>-band is much higher than the remaining classes at 17.3 at the median.</p>
+<div class="cell" data-execution_count="5">
+<div id="tbl-sy-gmag" class="cell quarto-float" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 4: Table of sy_gmag Features
+</figcaption>
+<div aria-describedby="tbl-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="5">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: left;">sy_gmag</th>
+<th style="text-align: left;">sy_gmag.1</th>
+<th style="text-align: left;">sy_gmag.2</th>
+<th style="text-align: left;">sy_gmag.3</th>
+<th style="text-align: left;">sy_gmag.4</th>
+<th style="text-align: left;">sy_gmag.5</th>
+<th style="text-align: left;">sy_gmag.6</th>
+<th style="text-align: left;">sy_gmag.7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">count</td>
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">std</td>
+<td style="text-align: left;">min</td>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">75%</td>
+<td style="text-align: left;">max</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">st_spectype</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">38.0</td>
+<td style="text-align: left;">13.40213157894737</td>
+<td style="text-align: left;">1.4915812676132458</td>
+<td style="text-align: left;">10.7614</td>
+<td style="text-align: left;">12.064725</td>
+<td style="text-align: left;">13.243500000000001</td>
+<td style="text-align: left;">14.971975</td>
+<td style="text-align: left;">16.4513</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">102.0</td>
+<td style="text-align: left;">13.375269607843137</td>
+<td style="text-align: left;">1.0365262651636484</td>
+<td style="text-align: left;">10.4929</td>
+<td style="text-align: left;">12.65185</td>
+<td style="text-align: left;">13.3064</td>
+<td style="text-align: left;">14.1084</td>
+<td style="text-align: left;">15.387</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K</td>
+<td style="text-align: left;">112.0</td>
+<td style="text-align: left;">13.141451785714285</td>
+<td style="text-align: left;">1.7709205577322165</td>
+<td style="text-align: left;">10.0139</td>
+<td style="text-align: left;">11.3126</td>
+<td style="text-align: left;">13.0851</td>
+<td style="text-align: left;">14.8948</td>
+<td style="text-align: left;">16.0648</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">121.0</td>
+<td style="text-align: left;">14.89958826446281</td>
+<td style="text-align: left;">2.0709525814057472</td>
+<td style="text-align: left;">9.91288</td>
+<td style="text-align: left;">13.021</td>
+<td style="text-align: left;">15.3392</td>
+<td style="text-align: left;">16.452</td>
+<td style="text-align: left;">18.7296</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-sy-gmag" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/sy_gmag.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: Box Plot of <code>sy_gmag</code>
+</figcaption>
+</figure>
+</div>
+<p>Again, from boxplot <a href="#fig-sy-gmag" class="quarto-xref">Figure 2</a>, for <em>M</em>-class of stars, the magnitude of the <em>g</em>-band is much higher than the remaining classes at 15.3 at the median.</p>
+<div class="cell" data-execution_count="6">
+<div id="tbl-sy-rmag" class="cell quarto-float" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 5: Table of sy_rmag Features
+</figcaption>
+<div aria-describedby="tbl-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="6">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: left;">sy_rmag</th>
+<th style="text-align: left;">sy_rmag.1</th>
+<th style="text-align: left;">sy_rmag.2</th>
+<th style="text-align: left;">sy_rmag.3</th>
+<th style="text-align: left;">sy_rmag.4</th>
+<th style="text-align: left;">sy_rmag.5</th>
+<th style="text-align: left;">sy_rmag.6</th>
+<th style="text-align: left;">sy_rmag.7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">count</td>
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">std</td>
+<td style="text-align: left;">min</td>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">75%</td>
+<td style="text-align: left;">max</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">st_spectype</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">38.0</td>
+<td style="text-align: left;">12.618894736842103</td>
+<td style="text-align: left;">1.1898093983054072</td>
+<td style="text-align: left;">10.3119</td>
+<td style="text-align: left;">11.6961</td>
+<td style="text-align: left;">12.58465</td>
+<td style="text-align: left;">13.383525</td>
+<td style="text-align: left;">15.7952</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">102.0</td>
+<td style="text-align: left;">12.5939837254902</td>
+<td style="text-align: left;">1.0916515281066876</td>
+<td style="text-align: left;">9.62924</td>
+<td style="text-align: left;">11.9247</td>
+<td style="text-align: left;">12.1874</td>
+<td style="text-align: left;">13.0922</td>
+<td style="text-align: left;">15.3971</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K</td>
+<td style="text-align: left;">112.0</td>
+<td style="text-align: left;">11.883027776785713</td>
+<td style="text-align: left;">1.7091447231936758</td>
+<td style="text-align: left;">8.75954</td>
+<td style="text-align: left;">10.5964</td>
+<td style="text-align: left;">12.024899999999999</td>
+<td style="text-align: left;">13.1786</td>
+<td style="text-align: left;">15.6566</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">121.0</td>
+<td style="text-align: left;">13.427749586776859</td>
+<td style="text-align: left;">2.0095481312538053</td>
+<td style="text-align: left;">8.46313</td>
+<td style="text-align: left;">11.6746</td>
+<td style="text-align: left;">13.4888</td>
+<td style="text-align: left;">15.2717</td>
+<td style="text-align: left;">16.86</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-sy-rmag" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/sy_rmag.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3: Box Plot of <code>sy_rmag</code>
+</figcaption>
+</figure>
+</div>
+<p>Again, from boxplot <a href="#fig-sy-rmag" class="quarto-xref">Figure 3</a>, for <em>M</em>-class of stars, the magnitude of the <em>r</em>-band is higher than the remaining classes at 13.4 at the median.</p>
+<div class="cell" data-execution_count="7">
+<div id="tbl-sy-imag" class="cell quarto-float" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 6: Table of sy_imag Features
+</figcaption>
+<div aria-describedby="tbl-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="7">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: left;">sy_imag</th>
+<th style="text-align: left;">sy_imag.1</th>
+<th style="text-align: left;">sy_imag.2</th>
+<th style="text-align: left;">sy_imag.3</th>
+<th style="text-align: left;">sy_imag.4</th>
+<th style="text-align: left;">sy_imag.5</th>
+<th style="text-align: left;">sy_imag.6</th>
+<th style="text-align: left;">sy_imag.7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">count</td>
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">std</td>
+<td style="text-align: left;">min</td>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">75%</td>
+<td style="text-align: left;">max</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">st_spectype</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">38.0</td>
+<td style="text-align: left;">12.576881578947368</td>
+<td style="text-align: left;">1.3087761569920782</td>
+<td style="text-align: left;">10.2734</td>
+<td style="text-align: left;">11.621</td>
+<td style="text-align: left;">12.457899999999999</td>
+<td style="text-align: left;">13.171</td>
+<td style="text-align: left;">15.4941</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">102.0</td>
+<td style="text-align: left;">12.396317843137258</td>
+<td style="text-align: left;">1.1410749290481463</td>
+<td style="text-align: left;">9.44522</td>
+<td style="text-align: left;">11.6457</td>
+<td style="text-align: left;">11.9485</td>
+<td style="text-align: left;">12.833225</td>
+<td style="text-align: left;">16.6984</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K</td>
+<td style="text-align: left;">112.0</td>
+<td style="text-align: left;">11.927328133928572</td>
+<td style="text-align: left;">1.5619910548391103</td>
+<td style="text-align: left;">8.42724</td>
+<td style="text-align: left;">10.4417</td>
+<td style="text-align: left;">12.0708</td>
+<td style="text-align: left;">13.172</td>
+<td style="text-align: left;">14.5213</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">121.0</td>
+<td style="text-align: left;">12.67205818181818</td>
+<td style="text-align: left;">2.1675341319081154</td>
+<td style="text-align: left;">7.75055</td>
+<td style="text-align: left;">10.9702</td>
+<td style="text-align: left;">12.9151</td>
+<td style="text-align: left;">14.3142</td>
+<td style="text-align: left;">17.9112</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-sy-imag" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/sy_imag.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: Box Plot of <code>sy_imag</code>
+</figcaption>
+</figure>
+</div>
+<p>From boxplot <a href="#fig-sy-imag" class="quarto-xref">Figure 4</a>, for all classes of stars, the magnitude at the <em>i</em>-band is similar.</p>
+<div class="cell" data-execution_count="8">
+<div id="tbl-sy-zmag" class="cell quarto-float" data-execution_count="8">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 7: Table of sy_zmag Features
+</figcaption>
+<div aria-describedby="tbl-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="8">
+<table class="do-not-create-environment cell">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: left;">sy_zmag</th>
+<th style="text-align: left;">sy_zmag.1</th>
+<th style="text-align: left;">sy_zmag.2</th>
+<th style="text-align: left;">sy_zmag.3</th>
+<th style="text-align: left;">sy_zmag.4</th>
+<th style="text-align: left;">sy_zmag.5</th>
+<th style="text-align: left;">sy_zmag.6</th>
+<th style="text-align: left;">sy_zmag.7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">count</td>
+<td style="text-align: left;">mean</td>
+<td style="text-align: left;">std</td>
+<td style="text-align: left;">min</td>
+<td style="text-align: left;">25%</td>
+<td style="text-align: left;">50%</td>
+<td style="text-align: left;">75%</td>
+<td style="text-align: left;">max</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">st_spectype</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: left;">38.0</td>
+<td style="text-align: left;">13.088815789473683</td>
+<td style="text-align: left;">0.9374631863118148</td>
+<td style="text-align: left;">10.4784</td>
+<td style="text-align: left;">12.9808</td>
+<td style="text-align: left;">13.17575</td>
+<td style="text-align: left;">13.463275</td>
+<td style="text-align: left;">15.2871</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G</td>
+<td style="text-align: left;">102.0</td>
+<td style="text-align: left;">12.9710131372549</td>
+<td style="text-align: left;">0.6918843048279733</td>
+<td style="text-align: left;">9.60484</td>
+<td style="text-align: left;">12.7326</td>
+<td style="text-align: left;">13.046</td>
+<td style="text-align: left;">13.3566</td>
+<td style="text-align: left;">14.4078</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K</td>
+<td style="text-align: left;">112.0</td>
+<td style="text-align: left;">11.853661964285717</td>
+<td style="text-align: left;">1.5438856430050727</td>
+<td style="text-align: left;">7.85169</td>
+<td style="text-align: left;">10.6281</td>
+<td style="text-align: left;">12.3442</td>
+<td style="text-align: left;">13.094574999999999</td>
+<td style="text-align: left;">13.9587</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M</td>
+<td style="text-align: left;">121.0</td>
+<td style="text-align: left;">12.173695950413222</td>
+<td style="text-align: left;">1.659763323241991</td>
+<td style="text-align: left;">7.76319</td>
+<td style="text-align: left;">11.0226</td>
+<td style="text-align: left;">12.7195</td>
+<td style="text-align: left;">13.2565</td>
+<td style="text-align: left;">15.1016</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-sy-zmag" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/sy_zmag.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: Box Plot of <code>sy_zmag</code>
+</figcaption>
+</figure>
+</div>
+<p>From boxplot <a href="#fig-sy-zmag" class="quarto-xref">Figure 5</a>, for all classes of stars, the magnitude at the <em>z</em>-band is similar.</p>
+</section>
+</section>
+<section id="classification-analysis" class="level2">
+<h2>Classification Analysis</h2>
+<div id="2f10b5eb" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">pl_name</th>
+<th data-quarto-table-cell-role="th">st_spectype</th>
+<th data-quarto-table-cell-role="th">sy_umag</th>
+<th data-quarto-table-cell-role="th">sy_gmag</th>
+<th data-quarto-table-cell-role="th">sy_rmag</th>
+<th data-quarto-table-cell-role="th">sy_imag</th>
+<th data-quarto-table-cell-role="th">sy_zmag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>373</td>
+<td>373</td>
+<td>373.000000</td>
+<td>373.000000</td>
+<td>373.000000</td>
+<td>373.000000</td>
+<td>373.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">unique</td>
+<td>219</td>
+<td>4</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">top</td>
+<td>WASP-92 b</td>
+<td>M</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">freq</td>
+<td>5</td>
+<td>121</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>16.034040</td>
+<td>13.802282</td>
+<td>12.653515</td>
+<td>12.363340</td>
+<td>12.388862</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">std</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1.560836</td>
+<td>1.849799</td>
+<td>1.735937</td>
+<td>1.691341</td>
+<td>1.435804</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">min</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>13.093200</td>
+<td>9.912880</td>
+<td>8.463130</td>
+<td>7.750550</td>
+<td>7.763190</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>15.079600</td>
+<td>12.463100</td>
+<td>11.650100</td>
+<td>11.386000</td>
+<td>11.608400</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>15.548300</td>
+<td>13.664600</td>
+<td>12.539900</td>
+<td>12.151500</td>
+<td>12.839400</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>16.479300</td>
+<td>15.199500</td>
+<td>13.678000</td>
+<td>13.425900</td>
+<td>13.290800</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">max</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>21.297500</td>
+<td>18.729600</td>
+<td>16.860000</td>
+<td>17.911200</td>
+<td>15.287100</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>We can now get an informed description of our cleaned data <a href="#tbl-describe_datset" class="quarto-xref">Table 8</a></p>
+<div class="cell" data-execution_count="10">
+<div id="tbl-describe_datset" class="cell quarto-float" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-describe_datset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 8: Table of Dataset Features
+</figcaption>
+<div aria-describedby="tbl-describe_datset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="10">
+<table class="do-not-create-environment cell" style="width:100%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">pl_name</th>
+<th style="text-align: left;">st_spectype</th>
+<th style="text-align: right;">sy_umag</th>
+<th style="text-align: right;">sy_gmag</th>
+<th style="text-align: right;">sy_rmag</th>
+<th style="text-align: right;">sy_imag</th>
+<th style="text-align: right;">sy_zmag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">373</td>
+<td style="text-align: left;">373</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">373</td>
+<td style="text-align: right;">373</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">219</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">WASP-92 b</td>
+<td style="text-align: left;">M</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">121</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">16.034</td>
+<td style="text-align: right;">13.8023</td>
+<td style="text-align: right;">12.6535</td>
+<td style="text-align: right;">12.3633</td>
+<td style="text-align: right;">12.3889</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">1.56084</td>
+<td style="text-align: right;">1.8498</td>
+<td style="text-align: right;">1.73594</td>
+<td style="text-align: right;">1.69134</td>
+<td style="text-align: right;">1.4358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">13.0932</td>
+<td style="text-align: right;">9.91288</td>
+<td style="text-align: right;">8.46313</td>
+<td style="text-align: right;">7.75055</td>
+<td style="text-align: right;">7.76319</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">15.0796</td>
+<td style="text-align: right;">12.4631</td>
+<td style="text-align: right;">11.6501</td>
+<td style="text-align: right;">11.386</td>
+<td style="text-align: right;">11.6084</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">15.5483</td>
+<td style="text-align: right;">13.6646</td>
+<td style="text-align: right;">12.5399</td>
+<td style="text-align: right;">12.1515</td>
+<td style="text-align: right;">12.8394</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">16.4793</td>
+<td style="text-align: right;">15.1995</td>
+<td style="text-align: right;">13.678</td>
+<td style="text-align: right;">13.4259</td>
+<td style="text-align: right;">13.2908</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">21.2975</td>
+<td style="text-align: right;">18.7296</td>
+<td style="text-align: right;">16.86</td>
+<td style="text-align: right;">17.9112</td>
+<td style="text-align: right;">15.2871</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>We can now set our y to be the value we are predicting which is <code>spec_type</code> and our predictors will be the following features: <code>sy_umag</code>, <code>sy_gmag</code>, <code>sy_rmag</code>, <code>sy_imag</code>, <code>sy_zmag</code>. From this we created a 75% train test split to run our data.</p>
+<div id="bcadb8b1" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>st_spectype
+M    0.337165
+K    0.295019
+G    0.275862
+F    0.091954
+Name: proportion, dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="12">
+<div id="tbl-y-train-test-values" class="cell quarto-float" data-execution_count="12">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-y-train-test-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 9: Table of the y Value Counts of our Train-Test Split
+</figcaption>
+<div aria-describedby="tbl-y-train-test-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
+<table class="do-not-create-environment cell">
+<thead>
+<tr class="header">
+<th style="text-align: right;">proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.337165</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.295019</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.275862</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.091954</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>As seen from <a href="#tbl-y-train-test-values" class="quarto-xref">Table 9</a> we have a pretty spread out class with no major class imbalance.</p>
+<div id="14e5726c" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>fit_time       0.003817
+score_time     0.000981
+test_score     0.674528
+train_score    0.721260
+dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="14">
+<div id="tbl-lr-cross_validate" class="cell quarto-float" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lr-cross_validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 10: Table of the Cross Validation Scores from Logistic Regression
+</figcaption>
+<div aria-describedby="tbl-lr-cross_validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="14">
+<table class="do-not-create-environment cell">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: right;">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fit_time</td>
+<td style="text-align: right;">0.00338473</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">score_time</td>
+<td style="text-align: right;">0.0008708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">test_score</td>
+<td style="text-align: right;">0.674528</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">train_score</td>
+<td style="text-align: right;">0.72126</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="confusion-matrix" class="level3">
+<h3>Confusion Matrix</h3>
+<p>One way to get a better understanding of the errors is by looking at how well the classifier is identifying each class. Which classes are most frequently confused with each other. Overall accuracy, along with class-specific metrics like precision, recall, and F1-score for multi-class classification problems.</p>
+<p>It’s easier to demonstrate evaluation metrics using an explicit validation set instead of using cross-validation. So let’s create a validation set as seen below in <a href="#tbl-confusion-matrix" class="quarto-xref">Table 11</a>.</p>
+<div class="cell" data-execution_count="16">
+<div id="tbl-confusion-matrix" class="cell quarto-float" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-confusion-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 11: Table of the Logistic Regression Confusion Matrix
+</figcaption>
+<div aria-describedby="tbl-confusion-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="16">
+<table class="do-not-create-environment cell">
+<thead>
+<tr class="header">
+<th style="text-align: right;">0</th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>For better interpretation, we will visualize the confusion matrix <a href="#fig-cm" class="quarto-xref">Figure 6</a>.</p>
+<div id="fig-cm" class="quarto-figure quarto-figure-center quarto-float">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../results/figures/confusion_matrix.png" class="img-fluid" style="width:90.0%" />
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 6: Visualization of the Confusion Matrix
+</figcaption>
+</figure>
+</div>
+<p>We can now calculate our accuracy score given by <a href="#tbl-accuracy-score" class="quarto-xref">Table 12</a> using our <code>Random Forest Classifier</code> given below.</p>
+<div class="cell" data-execution_count="17">
+<div id="tbl-accuracy-score" class="cell quarto-float" data-execution_count="17">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-accuracy-score-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 12: Table of Accuracy Score From Random Forest Classifier
+</figcaption>
+<div aria-describedby="tbl-accuracy-score-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="17">
+<table class="do-not-create-environment cell">
+<thead>
+<tr class="header">
+<th style="text-align: right;">0</th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>From this we can provide cross validation scores given in <a href="#tbl-rfc-cross-validate" class="quarto-xref">Table 13</a> using our <code>Random Forest Classifier</code>.</p>
+<div id="fb828e85" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/baron/vanc/DSCI-310-Group-16/venv/dsci/lib/python3.11/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but RandomForestClassifier was fitted without feature names
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy: 0.29464285714285715</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>fit_time       0.174118
+score_time     0.005711
+test_score     0.827504
+train_score    0.987551
+dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<div id="tbl-rfc-cross-validate" class="cell quarto-float" data-execution_count="19">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rfc-cross-validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 13: Table of the Cross Validation Scores from Random Forest Classifier
+</figcaption>
+<div aria-describedby="tbl-rfc-cross-validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="19">
+<table class="do-not-create-environment cell">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unnamed: 0</th>
+<th style="text-align: right;">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fit_time</td>
+<td style="text-align: right;">0.00338473</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">score_time</td>
+<td style="text-align: right;">0.0008708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">test_score</td>
+<td style="text-align: right;">0.674528</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">train_score</td>
+<td style="text-align: right;">0.72126</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Ultimately from our validation scores, we achieve a much higher test score from our scaled data with the RandomForestClassifier model of 0.675 compared to LogisticRegression model of 0.675. However our accuracy score is quite low at 0.</p>
+</section>
+</section>
+<section id="discussion" class="level2">
+<h2>Discussion</h2>
+<p>Our model yielded pretty average results with final overall accuracy of 0. This model is not good enough for an automated stellar classification process. In addition, our model can only classify stars into four classes due to the limited sample size. However these four classes make up about 99.8% of stellar population <span class="citation" data-cites="ledrew2001real">(<a href="#ref-ledrew2001real" role="doc-biblioref">Ledrew 2001</a>)</span> so being unable to classify stars into remaining three classes isn’t as big of an issue. Looking at the confusion matrix, we can see that our model tend to classify stars as cooler than they actually are (e.g: nine stars were classified as <em>G</em> but were actually <em>F</em> class). In order to improve this model, a larger sample size would help like using the Sloan Digital Sky Survey dataset instead. Another way to improve the model is to explore other classification methods such as k nearest neighbours. Finally, using another photometric system such as UBV could help since the bands are more seperated resulting in larger difference in magnitudes between star classes. More research into other classification methods could most likely yield higher accuracy.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-duan2009automated" class="csl-entry" role="listitem">
+Duan, Fu-Qing, Rong Liu, Ping Guo, Ming-Quan Zhou, and Fu-Chao Wu. 2009. <span>“Automated Spectral Classification Using Template Matching.”</span> <em>Research in Astronomy and Astrophysics</em> 9 (3): 341.
+</div>
+<div id="ref-hunter2007matplotlib" class="csl-entry" role="listitem">
+Hunter, John D. 2007. <span>“Matplotlib: A 2D Graphics Environment.”</span> <em>Computing in Science &amp; Engineering</em> 9 (03): 90–95.
+</div>
+<div id="ref-kent1994sloan" class="csl-entry" role="listitem">
+Kent, Stephen M. 1994. <span>“Sloan Digital Sky Survey.”</span> <em>Astrophysics and Space Science</em> 217: 27–30.
+</div>
+<div id="ref-ledrew2001real" class="csl-entry" role="listitem">
+Ledrew, Glenn. 2001. <span>“The Real Starry Sky.”</span> <em>Journal of the Royal Astronomical Society of Canada, Vol. 95, p. 32</em> 95: 32.
+</div>
+<div id="ref-mckinney2010data" class="csl-entry" role="listitem">
+McKinney, Wes et al. 2010. <span>“Data Structures for Statistical Computing in Python.”</span> In <em>SciPy</em>, 445:51–56. 1.
+</div>
+<div id="ref-morgan1942atlas" class="csl-entry" role="listitem">
+Morgan, WW, Philip C Keenan, and Edith Kellman. 1942. <span>“An Atlas of Stellar Spectra.”</span> <em>University of Chicago</em>.
+</div>
+<div id="ref-pedregosa2011scikit" class="csl-entry" role="listitem">
+Pedregosa, Fabian, Gaël Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, et al. 2011. <span>“Scikit-Learn: Machine Learning in Python.”</span> <em>The Journal of Machine Learning Research</em> 12: 2825–30.
+</div>
+<div id="ref-van1995python" class="csl-entry" role="listitem">
+Van Rossum, Guido, and Fred L Drake Jr. 1995. <span>“Python Tutorial.”</span> Centrum voor Wiskunde en Informatica Amsterdam, The Netherlands.
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id = "quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+</body>
+
+</html>
