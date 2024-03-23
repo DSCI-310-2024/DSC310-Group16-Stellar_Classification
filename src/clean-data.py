@@ -1,17 +1,24 @@
+import os
+from pathlib import Path
 import click
 import pandas as pd
 
 
 @click.command()
-@click.option("--input_file", type=str, default="data/processed/planet-systems.csv")
+@click.option("--input_file", type=str, default="data/raw/planet-systems.csv")
 @click.option("--output_file", type=str, default="data/processed/planet-systems.csv")
 def clean_data(input_file, output_file):
     """
     Reads data from the input file, performs data cleaning, and saves the cleaned data 
     to the output file.
     """
+    print("### Cleaning and preprocessing dataset... ###")
+    os.makedirs(Path(output_file).parent, exist_ok=True)
     # Read the data from the input file
     exoplanet_data = pd.read_csv(input_file)
+
+    # 1) remove confidence interval from all cells, just keep the mean value for these
+    exoplanet_data = exoplanet_data.apply(lambda col: col.str.split("&").str[0])
 
     # iterate through the columns and rename if "str" is at the end of the column name
     for col in exoplanet_data.columns:
@@ -46,4 +53,3 @@ def clean_data(input_file, output_file):
 
 if __name__ == "__main__":
     clean_data()
-

@@ -3,18 +3,18 @@
 # example usage:
 # make all
 
-all: data/processed/planet-systems.csv preprocess eda results
+all: data/raw/planet-systems.csv data/processed/planet-systems.csv eda results
 
-data/processed/planet-systems.csv : src/read-data.py 
+data/raw/planet-systems.csv : src/read-data.py 
 	python src/read-data.py
 
-preprocess: src/clean-data.py data/processed/planet-systems.csv
+data/processed/planet-systems.csv: src/clean-data.py data/raw/planet-systems.csv
 	python src/clean-data.py
 
-eda : src/data-eda.py data/processed/planet-systems.csv
+eda : data/processed/planet-systems.csv src/data-eda.py 
 	python src/data-eda.py
 
-results : src/data-results.py data/processed/planet-systems.csv
+results : data/processed/planet-systems.csv src/data-results.py 
 	python src/data-results.py
 
 clean_data:
@@ -41,4 +41,6 @@ clean_eda:
 	rm -f results/figures/sy_imag.png
 	rm -f results/figures/sy_zmag.png
 
-clean_all: clean_data clean_results clean_eda
+clean: clean_data clean_results clean_eda
+
+clean_all: clean
