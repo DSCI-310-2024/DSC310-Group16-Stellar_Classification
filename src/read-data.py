@@ -99,6 +99,9 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     dataset_dir = Path("data") / "processed"
     dataset_path = dataset_dir / f"{dataset_name}.csv"
 
+    # create the processed data directory if it doesn't exist
+    os.makedirs(dataset_dir, exist_ok=True)
+
     print("Preprocessing dataset...")
 
     # 1) remove confidence interval from all cells, just keep the mean value for these
