@@ -40,6 +40,18 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
    `make all`
 
+# Shifting to a docker container as the computational environment
+
+1. Build the docker image called "dsci310-group16" from the Dockerfile:
+
+   `docker build -t dsci310-group16`
+
+2. Run the container:
+
+   `docker run --rm -it dsci310-group16`
+
+3. Run your experiments inside the container as you would do it locally
+
 # Dependencies
 
   - `jupyterlab`
