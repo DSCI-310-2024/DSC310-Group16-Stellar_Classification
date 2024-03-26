@@ -23,11 +23,17 @@ RUN git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classific
 # switch to the project directory
 WORKDIR /home/dsci/DSCI310-Group16-Stellar_Classification
 
-# install a PDF viewer and make
-RUN apt-get update && \
-    apt-get install -y \
-        make \
-        evince
+# install make, TeX, and PDF viewer
+RUN apt-get update && apt-get install -y make evince
+
+# install quarto
+ENV QUARTO_VERSION="1.4.545"
+
+RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
+RUN apt-get install gdebi-core -y
+RUN gdebi quarto-linux-amd64.deb --non-interactive
+# install TeX for quarto
+RUN quarto install tinytex
 
 # carry out the analysis
 RUN make all
