@@ -258,7 +258,7 @@ the *z*-band is similar.
 
 ## Classification Analysis
 
-``` {python}
+```{python}
 only_stars_data.describe(include="all")
 ```
 
