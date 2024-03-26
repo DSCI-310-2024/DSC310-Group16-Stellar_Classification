@@ -119,7 +119,7 @@ results/figures/sy_gmag.png \
 results/figures/sy_rmag.png \
 results/figures/sy_imag.png \
 results/figures/sy_zmag.png 
-	quarto render reports/Spectral_type_classification_report.qmd
+	quarto render reports/Spectral_type_classification_report.qmd --to=html
 
 # remove all files under reports except for ones with the extension .qmd and .bib
 clean_reports:
