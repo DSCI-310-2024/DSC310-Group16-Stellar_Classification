@@ -18,4 +18,5 @@ def make_boxplot_and_table(data, column_name, csv_dir, box_plot_dir):
     1. A csv with the quantitative descriptions (mean, std, min) for the four bands (FGKM) loaded into
     the corresponding directory
     2. A boxplot of each of the four bands loaded into the corresponding directory
+    3. Throws an error if either the csv or the boxplot is not generated
     """
