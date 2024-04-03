@@ -5,7 +5,7 @@ import os
 
 # Import the clean_confidence_intervals function from the src folder
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from clean_confidence_intervals import clean_confidence_intervals
+from src.clean_confidence_intervals import clean_confidence_intervals
 
 # Test that the function correctly processes columns containing
 # the confidence interval and keeps only the mean value
