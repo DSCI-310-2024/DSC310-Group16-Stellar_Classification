@@ -27,7 +27,7 @@ def split_cross_val(preprocessed_data, target, split=0.75, folds=5):
     y = data[target]
 
     # Our predictors will be the following 5 features
-    X = data.drop(target, axis=1)
+    X = data[["sy_umag", "sy_gmag", "sy_rmag", "sy_imag", "sy_zmag"]]
 
     # Splitting the data
     X_train, X_test, y_train, y_test = train_test_split(

@@ -34,7 +34,7 @@ def test_invalid_parameters():
         split_cross_val('data/processed/planet-systems.csv', 'invalid_col', split=0.7, folds=5)
 
     # Non-existing data
-    with pytest.raises(ValueError):
+    with pytest.raises(FileNotFoundError):
         split_cross_val('data/processed/planet-systems-cleaned.csv', 'st_spectype', split=0.7, folds=5)
 
     # Invalid split ratio
