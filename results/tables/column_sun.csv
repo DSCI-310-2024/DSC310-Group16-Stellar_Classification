@@ -1,0 +1,6 @@
+,column_sun,column_sun,column_sun,column_sun,column_sun,column_sun,column_sun,column_sun
+,count,mean,std,min,25%,50%,75%,max
+st_spectype,,,,,,,,
+A,3.0,10.0,4.358898943540674,5.0,8.5,12.0,12.5,13.0
+B,1.0,2.0,,2.0,2.0,2.0,2.0,2.0
+C,2.0,6.5,4.949747468305833,3.0,4.75,6.5,8.25,10.0
