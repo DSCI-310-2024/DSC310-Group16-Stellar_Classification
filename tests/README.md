@@ -1,16 +1,16 @@
-## Test suite developer notes
+## Tests for functions used in data analysis
 
 ### Running the tests
-Tests are run using the `pytest` command in the root of the project.
+The test suite can be run via:
+
+```
+pytest tests/*
+```
 
 ### Preparation of test zip files
-The test zip files used in `______` were genereated 
-by running the `_________` script in the `tests` directory.
-These files need to exist in the remote GitHub repository for the tests to pass.
-If for some reason they go missing from the remote repository,
-we can re-run the `__________` script to re-generate them
-and then push them to the remote repository.
+The test data used in `test_clean_confdence_intervals` were genereated by running the `conftest.py` script in the `tests` directory.
 
-### Test teardown
-`___` contains the code to delete the files and directories 
-created by the tests which need to be deleted at the end of the tests.
+## Dependencies:
+Jupyter, Python and the following packages:
+- pandas
+- pytest

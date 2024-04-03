@@ -5,11 +5,10 @@ import pandas as pd
 def example_data_frame():
     """Provides a DataFrame for tests."""
     return pd.DataFrame({
-        'temperature_str': ['300&10', '400&15', '500&20'],
-        'st_spectype': ['G', 'K', None, 'M'],
-        'sy_umag': [10.5, None, 9.8, 10.2],
-        'sy_gmag': [10.1, 10.3, 10.2, 9.9],
-        'sy_rmag': [9.9, 9.8, None, 9.7],
-        'sy_imag': [9.7, 9.6, 9.5, 9.4],
-        'sy_zmag': [9.5, 9.4, 9.3, 9.2]
+        'st_spectype': ['G', 'K', 'M'],
+        'sy_umag': ['13.0932000&plusmn;0.0039422', '15.1234000&plusmn;0.0012345', '17.5678000&plusmn;0.0009876'],
+        'sy_gmag': ['10.0932000&plusmn;0.0039422', '12.1234000&plusmn;0.0012345', '14.5678000&plusmn;0.0009876'],
+        'sy_rmag': ['9.0932000&plusmn;0.0039422', '11.1234000&plusmn;0.0012345', '13.5678000&plusmn;0.0009876'],
+        'sy_imag': ['8.0932000&plusmn;0.0039422', '10.1234000&plusmn;0.0012345', '12.5678000&plusmn;0.0009876'],
+        'sy_zmag': ['7.0932000&plusmn;0.0039422', '9.1234000&plusmn;0.0012345', '11.5678000&plusmn;0.0009876']
     })
