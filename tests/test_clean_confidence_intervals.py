@@ -59,6 +59,7 @@ def test_clean_confidence_intervals_empty_strings_and_non_standard_separators(ex
     expected_gmag = ['', '20.0000-otherseparator0.0020', np.nan]
     assert cleaned_df['sy_gmag'].tolist() == expected_gmag, "Failed to handle empty strings and non-standard separators correctly."
 
+
 # Test handling mixed formats within columns
 def test_clean_confidence_intervals_mixed_formats(example_data_frame):
     example_data_frame['sy_umag'] = [
