@@ -33,7 +33,8 @@ def create_test_directories():
 
 
 # Test 1: Ensures csv is saved to the given directory
-def test_csv_saves_to_dir(test_data, test_csv_dir, test_bp_dir):
+def test_csv_saves_to_dir(test_data, create_test_directories): #this is what chatgpt wants but this also doesnt work
+    test_csv_dir, test_bp_dir = create_test_directories
     column_star = "column_star"
 
     make_boxplot_and_table(test_data, column_star, test_csv_dir, test_bp_dir)
