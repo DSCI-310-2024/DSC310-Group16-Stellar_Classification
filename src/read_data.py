@@ -1,20 +1,31 @@
-import glob
 import os
-from datetime import datetime
 from pathlib import Path
 
 import click
 import pandas as pd
 import requests
 
-def fetch_data(url, output_path) -> pd.DataFrame:
-    """Download the data from the internet.
+
+def fetch_data(
+    url: str,
+    output_path: str,
+) -> pd.DataFrame:
+    """Download dataset from the specified url and save it to the provided path.
 
     The dataset is saved under data/raw/Y-M-D_planet-systems.csv,
     along with its processed version under data/processed/planet-systems.csv by default.
 
     Documentation for constructing a TPA call to retrieve the dataset:
     https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS
+
+    Args:
+        url (str): The URL from which to fetch the data.
+
+        output_path (str): The file path where the fetched raw data will be saved.
+
+    Returns:
+        pd.DataFrame: A pandas DataFrame containing the fetched data.
+
     """
     dataset_name = "planet-systems"
     raw_data_dir = Path("data") / "raw"
@@ -41,10 +52,12 @@ def fetch_data(url, output_path) -> pd.DataFrame:
 
     print(f"Downloading Planet Systems dataset from {url}\nunder {raw_data_path}")
 
-    response = requests.get(url)
-
-    # assume request was successfull and access the downloaded content
-    raw_data = response.content
+    try:
+        response = requests.get(url)
+        raw_data = response.content
+    except requests.exceptions.RequestException:
+        print(f"ERROR: Error while trying to download the dataset from {url}")
+        raise
 
     # write downloaded content into a file under the raw data directory
     with open(raw_data_path, "wb") as f:
@@ -53,7 +66,7 @@ def fetch_data(url, output_path) -> pd.DataFrame:
     # df holds the expolanet dataset as a DataFrame object
     df = pd.read_csv(raw_data_path)
 
-    print(f"Loaded dataset from {raw_data_path}")
+    print(f"Successfully loaded dataset from {raw_data_path}")
 
     return df
 
