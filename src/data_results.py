@@ -7,16 +7,14 @@ import os
 import click
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.compose import make_column_transformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
                              confusion_matrix)
 from sklearn.model_selection import (cross_val_score, cross_validate,
                                      train_test_split)
-from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from traitlets import default
 
 
 # Main function
@@ -50,7 +48,9 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     )
 
     # Created and saved a y value count df
-    pd.DataFrame(y_train.value_counts(normalize=True)).to_csv(f"{results_csv_dir}/y-values_df.csv", index=False)
+    pd.DataFrame(y_train.value_counts(normalize=True)).to_csv(
+        f"{results_csv_dir}/y-values_df.csv", index=False
+    )
 
     # Logistic Regression cross validation and saved to csv
     pipe = make_pipeline(StandardScaler(), LogisticRegression())
