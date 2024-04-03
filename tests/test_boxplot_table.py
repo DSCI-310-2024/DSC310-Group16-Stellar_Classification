@@ -1,5 +1,6 @@
 import pytest
 import pandas as pd
+from pandas.testing import assert_frame_equal
 import sys
 import os
 import matplotlib.pyplot as plt
@@ -19,42 +20,63 @@ def test_data():
     }
     return pd.DataFrame(data)
 
-test_csv_dir = "results/tables"
-test_bp_dir = "results/figures"
+@pytest.fixture(scope="session", autouse=True)
+def create_test_directories():
+    test_csv_dir = "results/tables"
+    test_bp_dir = "results/figures"
+
+    # Create directories if they don't exist
+    os.makedirs(test_csv_dir, exist_ok=True)
+    os.makedirs(test_bp_dir, exist_ok=True)
+
+    yield test_csv_dir, test_bp_dir
 
 
 # Test 1: Ensures csv is saved to the given directory
-column_star = "column_star"
+def test_csv_saves_to_dir(test_data, test_csv_dir, test_bp_dir):
+    column_star = "column_star"
 
-def test_csv_saves_to_dir(test_data):
     make_boxplot_and_table(test_data, column_star, test_csv_dir, test_bp_dir)
     assert os.path.exists(f"{test_csv_dir}/{column_star}.csv"), "Csv file was not saved properly!"
 
 # Test 2: Makes sure csv matches the expected test data given
-column_moon = "moon"
 
-def test_csv_matches(test_data):
+def test_csv_matches(test_data, test_csv_dir, test_bp_dir):
+    column_moon = "column_moon"
     make_boxplot_and_table(test_data, column_moon, test_csv_dir, test_bp_dir)
     dir_csv_data = pd.read_csv(f"{test_csv_dir}/{column_moon}.csv")
-    test_csv_data = test_data[["st_spectype", {column_moon}]].groupby("st_spectype").describe()
+    test_csv_data = test_data[["st_spectype", column_moon]].groupby("st_spectype").describe()
     assert dir_csv_data.equals(test_csv_data), "Csv files do not match eachother!"
     
-    
 # Test 3: Ensures boxplot is saved to the given directory
-column_sun = "column_sun"
 
-def test_bp_saves_to_dir(test_data):
+def test_bp_saves_to_dir(test_data,test_csv_dir, test_bp_dir):
+    column_sun = "column_sun"
     make_boxplot_and_table(test_data, column_sun, test_csv_dir, test_bp_dir)
-    assert os.path.exists(f"{test_bp_dir}/{column_star}.png"), "Boxplot file was not saved properly"
+    assert os.path.exists(f"{test_bp_dir}/{column_sun}.png"), "Boxplot file was not saved properly"
 
 # Test 4: Ensures boxplot matches the expected test data given
-column_moon = "moon"
 
-def test_csv_matches(test_data):
+def test_bp_matches(test_data, test_csv_dir, test_bp_dir):
+    column_moon = "column_moon"
     make_boxplot_and_table(test_data, column_moon, test_csv_dir, test_bp_dir)
-    dir_bp_png = plt.imread(f"{test_bp_dir}/{column_moon}.png")
-    dir_bp_data = dir_bp_png.plot().get_figure()
+    dir_bp_read = plt.imread(f"{test_bp_dir}/{column_moon}.png")
     test_bp_data = test_data[["st_spectype", {column_moon}]].groupby("st_spectype").describe().boxplot()
-    assert dir_bp_data.equals(test_bp_data), "Boxplot figures do not match eachother!"
+    test_bp_fig = test_bp_data.figure.savefig("function_boxplot.png")
+    test_bp_read = plt.imread
+    assert dir_bp_read == test_bp_read, "Boxplot figures do not match eachother!"
 
-# Test 7: Checks if an invalid path is given
+# Test 5: Checks if an invalid path is given
+
+def test_invalid_path(test_data):
+    column_moon = "column_moon"
+    with pytest.raises(RuntimeError) as e:
+        make_boxplot_and_table(test_data, column_moon, "/path/doesntwork", "/path/doesntwork")
+    assert str(e.value) == "Error occurred: [Errno 2] No such file or directory: '/invalid/path'"
+    
+
+    
+
+ 
+
+
