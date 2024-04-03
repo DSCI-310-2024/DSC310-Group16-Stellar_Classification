@@ -2,8 +2,6 @@ import os
 import sys
 
 import numpy as np
-import pandas as pd
-import pytest
 
 # Import the clean_confidence_intervals function from the src folder
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))

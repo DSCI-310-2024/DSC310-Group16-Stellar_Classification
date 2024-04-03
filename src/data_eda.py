@@ -1,4 +1,4 @@
-# This script will create a PNG for our star count as well as the tables and 
+# This script will create a PNG for our star count as well as the tables and
 # corresponding box plots of the magnitudes of bands for each star
 
 # Imports

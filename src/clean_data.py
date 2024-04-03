@@ -1,23 +1,21 @@
 import os
+import sys
 from pathlib import Path
+
 import click
 import pandas as pd
-import sys
-import os
 
 # Import clean_confidence_intervals function from the src folder
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from clean_confidence_intervals import clean_confidence_intervals
 
 
 @click.command()
 @click.option("--input_file", type=str, default="data/raw/planet-systems.csv")
 @click.option("--output_file", type=str, default="data/processed/planet-systems.csv")
-
-
 def clean_data(input_file, output_file):
     """
-    Reads data from the input file, performs data cleaning and preprocessing, 
+    Reads data from the input file, performs data cleaning and preprocessing,
     and saves the cleaned data to the output file.
     """
     print("### Cleaning and preprocessing dataset... ###")
@@ -33,29 +31,25 @@ def clean_data(input_file, output_file):
 
     # Removes confidence intervals, keeping only the mean value (functions imported from src folder)
     exoplanet_data = clean_confidence_intervals(exoplanet_data)
-    
+
     # Iterates through the columns and renames columns by removing 'str' from the end of column names.
     for col in exoplanet_data.columns:
         if col.endswith("str"):
             new_col_name = col[:-3]  # removes "str"
             exoplanet_data.rename(columns={col: new_col_name}, inplace=True)
 
-    # Filters the data to keep only the rows where the values in the "st_spectype" column are among 
-    # the specified spectral types: "O", "B", "A", "F", "G", "K", or "M" and converts spectral type 
+    # Filters the data to keep only the rows where the values in the "st_spectype" column are among
+    # the specified spectral types: "O", "B", "A", "F", "G", "K", or "M" and converts spectral type
     # column to category type.
-    exoplanet_data = (
-        exoplanet_data.copy()
-    )  # needed to avoid warning raised by pandas
+    exoplanet_data = exoplanet_data.copy()  # needed to avoid warning raised by pandas
     exoplanet_data["st_spectype"] = exoplanet_data["st_spectype"].transform(
         lambda x: x[0]
     )
     exoplanet_data = exoplanet_data.loc[
         exoplanet_data["st_spectype"].isin(["O", "B", "A", "F", "G", "K", "M"])
     ]
-    exoplanet_data["st_spectype"] = exoplanet_data["st_spectype"].astype(
-        "category"
-    )
-    
+    exoplanet_data["st_spectype"] = exoplanet_data["st_spectype"].astype("category")
+
     # Saves the cleaned and preprocessed data to the output file
     exoplanet_data.to_csv(output_file, index=False)
 
