@@ -40,11 +40,11 @@ def fetch_data(
     columns = (
         "pl_name,"
         "st_spectype,"
-        "sy_umagstr,"
-        "sy_gmagstr,"
-        "sy_rmagstr,"
-        "sy_imagstr,"
-        "sy_zmagstr"
+        "sy_umag,"
+        "sy_gmag,"
+        "sy_rmag,"
+        "sy_imag,"
+        "sy_zmag"
     )
     query = f"select+{columns}+from+ps"
     format = "csv"
