@@ -8,10 +8,10 @@ import pandas as pd
 import requests
 
 def fetch_data(url, output_path) -> pd.DataFrame:
-    """Download the data from the internet or read in the data from disk if it exists.
+    """Download the data from the internet.
 
     The dataset is saved under data/raw/Y-M-D_planet-systems.csv,
-    along with its processed version under data/processed/planet-systems.csv.
+    along with its processed version under data/processed/planet-systems.csv by default.
 
     Documentation for constructing a TPA call to retrieve the dataset:
     https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS
