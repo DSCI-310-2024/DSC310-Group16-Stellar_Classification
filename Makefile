@@ -19,14 +19,14 @@ all : download preprocess eda results report
 
 download: data/raw/planet-systems.csv
 
-data/raw/planet-systems.csv : src/read-data.py 
-	python src/read-data.py
+data/raw/planet-systems.csv : src/read_data.py 
+	python src/read_data.py
 
 
 preprocess: data/processed/planet-systems.csv
 
-data/processed/planet-systems.csv : src/clean-data.py data/raw/planet-systems.csv
-	python src/clean-data.py
+data/processed/planet-systems.csv : src/clean_data.py data/raw/planet-systems.csv
+	python src/clean_data.py
 
 
 eda: results/figures/star_count_hist.png \
@@ -51,8 +51,8 @@ results/figures/sy_umag.png \
 results/figures/sy_gmag.png \
 results/figures/sy_rmag.png \
 results/figures/sy_imag.png \
-results/figures/sy_zmag.png : data/processed/planet-systems.csv src/data-eda.py 
-	python src/data-eda.py
+results/figures/sy_zmag.png : data/processed/planet-systems.csv src/data_eda.py 
+	python src/data_eda.py
 
 
 results: results/tables/logistic_regression_df.csv \
@@ -65,8 +65,8 @@ results/tables/logistic_regression_df.csv \
 results/tables/random_forest_classifier_df.csv \
 results/tables/accuracy.csv \
 results/tables/confusion_matrix.csv \
-results/figures/confusion_matrix.png : data/processed/planet-systems.csv src/data-results.py 
-	python src/data-results.py
+results/figures/confusion_matrix.png : data/processed/planet-systems.csv src/data_results.py 
+	python src/data_results.py
 
 
 clean_data :
