@@ -5,12 +5,17 @@ import click
 import pandas as pd
 import requests
 
+<<<<<<< HEAD
 
 def fetch_data(
     url: str,
     output_path: str,
 ) -> pd.DataFrame:
     """Download dataset from the specified url and save it to the provided path.
+=======
+def fetch_data(url, output_path) -> pd.DataFrame:
+    """Download the data from the internet.
+>>>>>>> main
 
     The dataset is saved under data/raw/Y-M-D_planet-systems.csv,
     along with its processed version under data/processed/planet-systems.csv by default.
