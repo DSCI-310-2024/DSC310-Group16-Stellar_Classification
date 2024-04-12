@@ -10,19 +10,21 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 # Reproducing the results in a docker container
 
-1. Clone our Repository from Github:
-   
+1. Go to a directory where you want to clone the repository
+
+2. Make sure git, docker, and docker-compose are installed on your system
+
+3. Make sure docker is running on your system
+
+4. Clone the repository from Github:
+
    `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
 
-2. Build the docker image called "dsci310-group16" from the Dockerfile:
+5. Run docker-compose to carry out the analysis in a reproducable way:
 
-   `docker build -t dsci310-group16`
+   `docker-compose run --rm analysis-env bash -c "make clean && make all"`
 
-3. Run the container:
-
-   `docker run --rm -it dsci310-group16`
-
-4. The generated report will show up as PDF
+6. The generated report will show up under `results/Spectral_type_classification_report.html` in the cloned repository, which you can open up by navigating to it in your file explorer and opening it with your browser by double clicking it. If that doesn't work, try right clicking, and selecting open with... and then select your preferred browser to open it in.
 
 # Contributing to the codebase
 
@@ -53,6 +55,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
   - `pyarrow`
   - `tabulate`
 
+Also, see Dockerfile for specific versions.
 
 # License
 
