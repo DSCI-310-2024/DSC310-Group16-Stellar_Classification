@@ -55,6 +55,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
   - `pyarrow`
   - `tabulate`
 
+Also, see Dockerfile for specific versions.
 
 # License
 
