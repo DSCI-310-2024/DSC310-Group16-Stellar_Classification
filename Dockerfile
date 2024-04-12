@@ -1,5 +1,5 @@
-# Use the specified Jupyter notebook image as the base
-FROM continuumio/anaconda3
+# Start from the Jupyter scipy-notebook as a base
+FROM nginx:alpine
 
 # Install packages from conda forge channel
 RUN conda install -c conda-forge -y\
@@ -24,16 +24,4 @@ RUN git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classific
 WORKDIR /home/dsci/DSCI310-Group16-Stellar_Classification
 
 # install make 
-RUN apt-get update && apt-get install -y make
-
-# install quarto
-ENV QUARTO_VERSION="1.4.545"
-
-RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
-RUN apt-get install gdebi-core -y
-RUN gdebi quarto-linux-amd64.deb --non-interactive
-# install TeX for quarto
-RUN quarto install tinytex
-
-# carry out the analysis
-RUN make all
+RUN apt-get update && apt-get install -y make lmodern
