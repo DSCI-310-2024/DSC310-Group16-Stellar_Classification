@@ -10,21 +10,23 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 # Reproducing the results in a docker container
 
-1. Go to a directory where you want to clone the repository
+1. Open up a terminal and go to a directory where you want to clone the repository
 
-2. Make sure git, docker, and docker-compose are installed on your system
+3. Make sure git, docker, and docker-compose are installed on your system
 
-3. Make sure docker is running on your system
+4. Make sure docker is running on your system
 
-4. Clone the repository from Github:
+5. Clone the repository from Github into your selected folder:
 
-   `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
+   `git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classification.git`
 
-5. Run docker-compose to carry out the analysis in a reproducable way:
+6. Go into that directory using the command `cd DSCI310-Group16-Stellar_Classification`
+
+7. Run docker-compose to carry out the analysis in a reproducable way:
 
    `docker-compose run --rm analysis-env bash -c "make clean && make all"`
 
-6. The generated report will show up under `results/Spectral_type_classification_report.html` in the cloned repository, which you can open up by navigating to it in your file explorer and opening it with your browser by double clicking it. If that doesn't work, try right clicking, and selecting open with... and then select your preferred browser to open it in.
+8. The generated report will show up under `results/Spectral_type_classification_report.html` in the cloned repository, which you can open up by navigating to it in your file explorer and opening it with your browser by double clicking it. If that doesn't work, try right clicking, and selecting open with... and then select your preferred browser to open it in.
 
 # Contributing to the codebase
 
