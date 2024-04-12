@@ -3,10 +3,12 @@
 
 # Imports
 import os
-
+import sys
 import click
 import matplotlib.pyplot as plt
 import pandas as pd
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from boxplot_table_function import make_boxplot_and_table
 
 
 # Main function
@@ -42,46 +44,10 @@ def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
 
     plt.savefig(f"{eda_png_dir}/star_count_hist.png")
 
-    # create and save the table for sy_umag
-    sy_umag_csv = data[["st_spectype", "sy_umag"]].groupby("st_spectype").describe()
-    sy_umag_csv.to_csv(f"{eda_csv_dir}/sy_umag.csv")
+    column_names = ["sy_umag", "sy_gmag", "sy_rmag", "sy_imag", "sy_zmag"]
 
-    # create and save the boxplot for sy_umag
-    sy_umag_bp = data[["st_spectype", "sy_umag"]].groupby("st_spectype").boxplot()
-    plt.savefig(f"{box_plot_dir}/sy_umag.png")
-
-    # create and save the table for sy_gmag
-    sy_gmag_csv = data[["st_spectype", "sy_gmag"]].groupby("st_spectype").describe()
-    sy_gmag_csv.to_csv(f"{eda_csv_dir}/sy_gmag.csv")
-
-    # create and save the boxplot for sy_gmag
-    sy_gmag_bp = data[["st_spectype", "sy_gmag"]].groupby("st_spectype").boxplot()
-    plt.savefig(f"{box_plot_dir}/sy_gmag.png")
-
-    # create and save the table for sy_rmag
-    sy_rmag_csv = data[["st_spectype", "sy_rmag"]].groupby("st_spectype").describe()
-    sy_rmag_csv.to_csv(f"{eda_csv_dir}/sy_rmag.csv")
-
-    # create and save the boxplot for sy_rmag
-    ry_gmag_bp = data[["st_spectype", "sy_rmag"]].groupby("st_spectype").boxplot()
-    plt.savefig(f"{box_plot_dir}/sy_rmag.png")
-
-    # create and save the table for sy_imag
-    sy_imag_csv = data[["st_spectype", "sy_imag"]].groupby("st_spectype").describe()
-    sy_imag_csv.to_csv(f"{eda_csv_dir}/sy_imag.csv")
-
-    # create and save the boxplot for sy_imag
-    sy_imag_bp = data[["st_spectype", "sy_imag"]].groupby("st_spectype").boxplot()
-    plt.savefig(f"{box_plot_dir}/sy_imag.png")
-
-    # create and save the table for sy_zmag
-    sy_zmag_csv = data[["st_spectype", "sy_zmag"]].groupby("st_spectype").describe()
-    sy_zmag_csv.to_csv(f"{eda_csv_dir}/sy_zmag.csv")
-
-    # create and save the boxplot for sy_zmag
-    sy_zmag_bp = data[["st_spectype", "sy_zmag"]].groupby("st_spectype").boxplot()
-    plt.savefig(f"{box_plot_dir}/sy_zmag.png")
-
+    for name in column_names:
+        make_boxplot_and_table(data, name, eda_csv_dir, box_plot_dir)
 
 if __name__ == "__main__":
     main()

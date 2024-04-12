@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.547">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.4.545" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-
-<meta name="author" content="Olivia Lam, Aron Braham, Lucy Liu, and Viet Ngo" />
+<meta name="author" content="Olivia Lam, Aron Braham, Lucy Liu, and Viet Ngo">
 
 <title>Stellar Classification using Photometric data</title>
 <style>
@@ -45,9 +43,19 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="Spectral_type_classification_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Spectral_type_classification_report_files/libs/quarto-html/quarto.js"></script>
+<script src="Spectral_type_classification_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="Spectral_type_classification_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Spectral_type_classification_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Spectral_type_classification_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Spectral_type_classification_report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Spectral_type_classification_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Spectral_type_classification_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Spectral_type_classification_report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" data-relocate-top="true"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -57,7 +65,19 @@ div.csl-indent {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  <div id="quarto-toc-target"></div>
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods-results" id="toc-methods-results" class="nav-link" data-scroll-target="#methods-results">Methods &amp; Results</a></li>
+  <li><a href="#data-eda-and-wrangling" id="toc-data-eda-and-wrangling" class="nav-link" data-scroll-target="#data-eda-and-wrangling">Data EDA and Wrangling</a></li>
+  <li><a href="#classification-analysis" id="toc-classification-analysis" class="nav-link" data-scroll-target="#classification-analysis">Classification Analysis</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="../Spectral_type_classification_report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -85,74 +105,62 @@ div.csl-indent {
 
 </header>
 
-<nav id="TOC" role="doc-toc">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#summary" id="toc-summary">Summary</a></li>
-  <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
-  <li><a href="#methods-results" id="toc-methods-results">Methods &amp; Results</a></li>
-  <li><a href="#data-eda-and-wrangling" id="toc-data-eda-and-wrangling">Data EDA and Wrangling</a></li>
-  <li><a href="#classification-analysis" id="toc-classification-analysis">Classification Analysis</a></li>
-  <li><a href="#discussion" id="toc-discussion">Discussion</a></li>
-  <li><a href="#references" id="toc-references">References</a></li>
-  </ul>
-</nav>
+
 <section id="summary" class="level2">
-<h2>Summary</h2>
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>In this report, we attempt to build a classification model using logistic regression which uses photo metric measurements from telescopes to classify stars under the Morgan-Keenan system. Our final classifier performed poorly with a low accuracy on testing data set with a tendency to classify stars as one class cooler than its actual class type. Our model can only classify stars into four main classes due to the small sample size. It is recommended that further study using larger sample sizes and methods to improve the classification model.</p>
 </section>
 <section id="introduction" class="level2">
-<h2>Introduction</h2>
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Current and future astronomical surveys will observe hundred of thousands of objects each year. Due to the massive amount of spectroscopic and photometric data produced, an automated stellar classification process has become important in the field of astronomy in the past few years.</p>
 <p>In astronomy, understanding the spectral characteristics of celestial objects serves as a fundamental pillar for unraveling the mysteries of the cosmos. Spectral classification, a cornerstone of astronomical research, enables us to discern the chemical composition, temperature, and evolutionary stage of stars, galaxies, and other celestial bodies. In the earliest days it was based on mass and temperature; however, our modern classification system has evolved and we classify stars based on the Morgan–Keenan (MK) system <span class="citation" data-cites="morgan1942atlas">(<a href="#ref-morgan1942atlas" role="doc-biblioref">Morgan, Keenan, and Kellman 1942</a>)</span> which group stars into 7 classes based on their spectral characteristics. Under the MK system, astronomers analyse electromagnetic radiation from stars to determine its class. These electromagnetic spectrum have dark lines to determine which and how abundant elements are present in the star. The seven classes in the MK system - O, B, A, F, G, K, and M - are sequenced from the hottest (O type) to the coolest (K type) which also exhibits a certain characteristic that is very visible - colour. Hence in this report, we will classify stars using photometric data and in the Discussion section, we will evaluate whether this is a reliable alternative for the traditional method of comparing the best fit of the spectra to that of templates using statistical tests <span class="citation" data-cites="duan2009automated">(<a href="#ref-duan2009automated" role="doc-biblioref">Duan et al. 2009</a>)</span>.</p>
 <section id="definitions" class="level3">
-<h3>Definitions</h3>
+<h3 class="anchored" data-anchor-id="definitions">Definitions</h3>
 <p><strong>Photometry</strong>: the measurement of the flux or intensity of an astronomical object’s electromagnetic radiation</p>
 <p>The photo metric system we’re using to classify star types is the <em>Sloan</em> system <span class="citation" data-cites="kent1994sloan">(<a href="#ref-kent1994sloan" role="doc-biblioref">Kent 1994</a>)</span> used by the Sloan Digital Sky Survey. The system measures the intensity of electromagnetic radition from stars at 5 bands: - <em>u</em> (345nm) - <em>g</em> (475nm which is a light blue in the visible spectrum) - <em>r</em> (622nm which is orange) - <em>i</em> (763nm which is deep red) - <em>z</em> (905nm)</p>
 </section>
 </section>
 <section id="methods-results" class="level2">
-<h2>Methods &amp; Results</h2>
+<h2 class="anchored" data-anchor-id="methods-results">Methods &amp; Results</h2>
 <section id="data" class="level3">
-<h3>Data</h3>
+<h3 class="anchored" data-anchor-id="data">Data</h3>
 <p>This report has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program. NASA Exoplanet Archive collects data from various sources, including ground-based observatories and space telescopes such as the Kepler Space Telescope and the Transiting Exoplanet Survey Satellite (TESS). The dataset is we’re using is their <a href="https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&amp;config=PS">Planetary Systems dataset</a> which has the columns of names, spectral type and measurements using Sloan photometric system selected.</p>
 <p>The Python programming language <span class="citation" data-cites="van1995python">(<a href="#ref-van1995python" role="doc-biblioref">Van Rossum and Drake Jr 1995</a>)</span> and the following Python packages were used to perform the analysis: <code>matplotlib</code> <span class="citation" data-cites="hunter2007matplotlib">(<a href="#ref-hunter2007matplotlib" role="doc-biblioref">Hunter 2007</a>)</span>, <code>scikit-learn</code> <span class="citation" data-cites="pedregosa2011scikit">(<a href="#ref-pedregosa2011scikit" role="doc-biblioref">Pedregosa et al. 2011</a>)</span> and <code>Pandas</code> <span class="citation" data-cites="mckinney2010data">(<a href="#ref-mckinney2010data" role="doc-biblioref">McKinney et al. 2010</a>)</span>.</p>
 </section>
 <section id="imports" class="level3">
-<h3>Imports</h3>
+<h3 class="anchored" data-anchor-id="imports">Imports</h3>
 <p>First of all, let’s import the packages we will use to carry out the analysis and download the dataset. For our analysis we primarily used <code>sklearn</code> and <code>pandas</code> for our classification analysis as well as <code>matplotlib</code> for our visualizations.</p>
 </section>
 <section id="reading-the-dataset" class="level3">
-<h3>Reading the Dataset</h3>
+<h3 class="anchored" data-anchor-id="reading-the-dataset">Reading the Dataset</h3>
 <p>We then download the dataset of interest: the Expoplanet Systems dataset from NASA, containing information about measurements of planets and stars. We are interested in the spectral type of stars given a subset of these measurements.</p>
 <div class="cell" data-execution_count="2">
-<div id="tbl-read-data" class="cell quarto-float" data-execution_count="2">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-read-data" class="cell quarto-float anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-read-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 1: Table of our Initial Data
+Table&nbsp;1: Table of our Initial Data
 </figcaption>
 <div aria-describedby="tbl-read-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="2">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
 </colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">pl_name</th>
 <th style="text-align: left;">st_spectype</th>
-<th style="text-align: right;">sy_umagstr</th>
-<th style="text-align: right;">sy_gmagstr</th>
-<th style="text-align: right;">sy_rmagstr</th>
-<th style="text-align: right;">sy_imagstr</th>
-<th style="text-align: right;">sy_zmagstr</th>
+<th style="text-align: right;">sy_umag</th>
+<th style="text-align: right;">sy_gmag</th>
+<th style="text-align: right;">sy_rmag</th>
+<th style="text-align: right;">sy_imag</th>
+<th style="text-align: right;">sy_zmag</th>
 </tr>
 </thead>
 <tbody>
@@ -256,26 +264,26 @@ Table 1: Table of our Initial Data
 </section>
 </section>
 <section id="data-eda-and-wrangling" class="level2">
-<h2>Data EDA and Wrangling</h2>
+<h2 class="anchored" data-anchor-id="data-eda-and-wrangling">Data EDA and Wrangling</h2>
 <p>This dataset from NASA’s Exoplanet Archive include all planets and stars. Therefore we will wrangle the dataset such that it only contain stars with Sloan magnitudes for photometric measurements.</p>
-<p>Below in <a href="#tbl-cleaned-data" class="quarto-xref">Table 2</a> our preprocessing included dropping NA values from our <code>spec_type</code> and band star brightness features. We are also only interested in the first letter of the spectral type, which becomes our y value later in the analysis, so we modified that feature as well.</p>
+<p>Below in <a href="#tbl-cleaned-data" class="quarto-xref">Table&nbsp;2</a> our preprocessing included dropping NA values from our <code>spec_type</code> and band star brightness features. We are also only interested in the first letter of the spectral type, which becomes our y value later in the analysis, so we modified that feature as well.</p>
 <div class="cell" data-execution_count="3">
-<div id="tbl-cleaned-data" class="cell quarto-float" data-execution_count="3">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-cleaned-data" class="cell quarto-float anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cleaned-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 2: Table of our Cleaned Dataset
+Table&nbsp;2: Table of our Cleaned Dataset
 </figcaption>
 <div aria-describedby="tbl-cleaned-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="3">
-<table class="do-not-create-environment cell" style="width:100%;">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 17%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
+<col style="width: 16%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -371,13 +379,13 @@ Table 2: Table of our Cleaned Dataset
 <td style="text-align: right;">11.0601</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">HD 81688 b</td>
-<td style="text-align: left;">K</td>
-<td style="text-align: right;">13.0932</td>
-<td style="text-align: right;">10.9213</td>
-<td style="text-align: right;">9.31906</td>
-<td style="text-align: right;">8.71834</td>
-<td style="text-align: right;">7.85169</td>
+<td style="text-align: left;">WASP-77 A b</td>
+<td style="text-align: left;">G</td>
+<td style="text-align: right;">13.9531</td>
+<td style="text-align: right;">12.9972</td>
+<td style="text-align: right;">11.797</td>
+<td style="text-align: right;">11.4129</td>
+<td style="text-align: right;">12.4989</td>
 </tr>
 </tbody>
 </table>
@@ -388,44 +396,44 @@ Table 2: Table of our Cleaned Dataset
 </div>
 <p><strong>Note</strong>: In order to run classification models on our dataset, we had to remove the NA values from our magnitudes. We were planning to incorporate <code>SimpleImputer()</code> into our pipeline during data preprocessing, but about 2200 rows contained NA values, so we thought it was best to simply drop them. This explains the drastic decrease in observations.</p>
 <section id="variable-descriptions" class="level3">
-<h3>Variable Descriptions:</h3>
+<h3 class="anchored" data-anchor-id="variable-descriptions">Variable Descriptions:</h3>
 <p><code>st_spectype</code>: Classification of the star based on their spectral characteristics following the Morgan-Keenan system</p>
 <p><code>sy_umag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) u band, in units of magnitudes</p>
 <p><code>sy_gmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) g band, in units of magnitudes</p>
 <p><code>sy_rmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) r band, in units of magnitudes</p>
 <p><code>sy_imag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) i band, in units of magnitudes</p>
 <p><code>sy_zmag</code>: Brightness of the host star as measured using the Sloan Digital Sky Survey (SDSS) z band, in units of magnitudes</p>
-<p>From our <a href="#fig-sy-umag" class="quarto-xref">Figure 1</a> visualization below we can see that our highest stellar value counts was for the <em>M</em> class, followed respectively by <em>K</em>, <em>G</em>, and <em>F</em>.</p>
-<div id="fig-sy-umag" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<p>From our <a href="#fig-sy-umag" class="quarto-xref">Figure&nbsp;1</a> visualization below we can see that our highest stellar value counts was for the <em>M</em> class, followed respectively by <em>K</em>, <em>G</em>, and <em>F</em>.</p>
+<div id="fig-sy-umag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/star_count_hist.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/star_count_hist.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: <code>Histogram of Star Count Values</code>
+Figure&nbsp;1: <code>Histogram of Star Count Values</code>
 </figcaption>
 </figure>
 </div>
 <p>Now we will explore the features and boxplots of each band’s magnitude for our four types of stellar classifications.</p>
 <div class="cell" data-execution_count="4">
-<div id="tbl-sy-umag" class="cell quarto-float" data-execution_count="4">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-sy-umag" class="cell quarto-float anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 3: Table of sy_umag Features
+Table&nbsp;3: Table of sy_umag Features
 </figcaption>
 <div aria-describedby="tbl-sy-umag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="4">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 8%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -487,24 +495,24 @@ Table 3: Table of sy_umag Features
 </tr>
 <tr class="odd">
 <td style="text-align: left;">K</td>
-<td style="text-align: left;">112.0</td>
-<td style="text-align: left;">15.60805535714286</td>
-<td style="text-align: left;">0.8534817900324461</td>
+<td style="text-align: left;">111.0</td>
+<td style="text-align: left;">15.606254054054052</td>
+<td style="text-align: left;">0.8571385874772564</td>
 <td style="text-align: left;">13.0932</td>
 <td style="text-align: left;">15.0413</td>
-<td style="text-align: left;">15.56765</td>
+<td style="text-align: left;">15.5262</td>
 <td style="text-align: left;">15.8447</td>
 <td style="text-align: left;">17.9905</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">M</td>
-<td style="text-align: left;">121.0</td>
-<td style="text-align: left;">17.467182644628096</td>
-<td style="text-align: left;">1.812482452589895</td>
+<td style="text-align: left;">123.0</td>
+<td style="text-align: left;">17.45189349593496</td>
+<td style="text-align: left;">1.80152628272096</td>
 <td style="text-align: left;">14.5112</td>
 <td style="text-align: left;">15.7198</td>
 <td style="text-align: left;">17.2832</td>
-<td style="text-align: left;">19.1895</td>
+<td style="text-align: left;">19.11155</td>
 <td style="text-align: left;">21.2975</td>
 </tr>
 </tbody>
@@ -515,31 +523,31 @@ Table 3: Table of sy_umag Features
 </div>
 </div>
 <div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img src="../results/figures/sy_umag.png" class="img-fluid" style="width:90.0%" /></p>
+<figure class="figure">
+<p><img src="../results/figures/sy_umag.png" class="img-fluid figure-img" style="width:90.0%"></p>
 <figcaption>Box Plot of <code>fig-sy-umag</code></figcaption>
 </figure>
 </div>
-<p>From boxplot <a href="#fig-sy-umag" class="quarto-xref">Figure 1</a>, for <em>M</em>-class of stars, the magnitude of the <em>u</em>-band is much higher than the remaining classes at 17.3 at the median.</p>
+<p>From boxplot <a href="#fig-sy-umag" class="quarto-xref">Figure&nbsp;1</a>, for <em>M</em>-class of stars, the magnitude of the <em>u</em>-band is much higher than the remaining classes at 17.3 at the median.</p>
 <div class="cell" data-execution_count="5">
-<div id="tbl-sy-gmag" class="cell quarto-float" data-execution_count="5">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-sy-gmag" class="cell quarto-float anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 4: Table of sy_gmag Features
+Table&nbsp;4: Table of sy_gmag Features
 </figcaption>
 <div aria-describedby="tbl-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="5">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 8%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 9%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -601,24 +609,24 @@ Table 4: Table of sy_gmag Features
 </tr>
 <tr class="odd">
 <td style="text-align: left;">K</td>
-<td style="text-align: left;">112.0</td>
-<td style="text-align: left;">13.141451785714285</td>
-<td style="text-align: left;">1.7709205577322165</td>
+<td style="text-align: left;">111.0</td>
+<td style="text-align: left;">13.133122522522525</td>
+<td style="text-align: left;">1.7767468429016138</td>
 <td style="text-align: left;">10.0139</td>
 <td style="text-align: left;">11.3126</td>
-<td style="text-align: left;">13.0851</td>
+<td style="text-align: left;">12.8638</td>
 <td style="text-align: left;">14.8948</td>
 <td style="text-align: left;">16.0648</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">M</td>
-<td style="text-align: left;">121.0</td>
-<td style="text-align: left;">14.89958826446281</td>
-<td style="text-align: left;">2.0709525814057472</td>
+<td style="text-align: left;">123.0</td>
+<td style="text-align: left;">14.900404715447156</td>
+<td style="text-align: left;">2.053917312368352</td>
 <td style="text-align: left;">9.91288</td>
 <td style="text-align: left;">13.021</td>
-<td style="text-align: left;">15.3392</td>
-<td style="text-align: left;">16.452</td>
+<td style="text-align: left;">15.2645</td>
+<td style="text-align: left;">16.427950000000003</td>
 <td style="text-align: left;">18.7296</td>
 </tr>
 </tbody>
@@ -628,36 +636,36 @@ Table 4: Table of sy_gmag Features
 </figure>
 </div>
 </div>
-<div id="fig-sy-gmag" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<div id="fig-sy-gmag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/sy_gmag.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/sy_gmag.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-gmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Box Plot of <code>sy_gmag</code>
+Figure&nbsp;2: Box Plot of <code>sy_gmag</code>
 </figcaption>
 </figure>
 </div>
-<p>Again, from boxplot <a href="#fig-sy-gmag" class="quarto-xref">Figure 2</a>, for <em>M</em>-class of stars, the magnitude of the <em>g</em>-band is much higher than the remaining classes at 15.3 at the median.</p>
+<p>Again, from boxplot <a href="#fig-sy-gmag" class="quarto-xref">Figure&nbsp;2</a>, for <em>M</em>-class of stars, the magnitude of the <em>g</em>-band is much higher than the remaining classes at 15.3 at the median.</p>
 <div class="cell" data-execution_count="6">
-<div id="tbl-sy-rmag" class="cell quarto-float" data-execution_count="6">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-sy-rmag" class="cell quarto-float anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 5: Table of sy_rmag Features
+Table&nbsp;5: Table of sy_rmag Features
 </figcaption>
 <div aria-describedby="tbl-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="6">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 8%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -709,7 +717,7 @@ Table 5: Table of sy_rmag Features
 <tr class="even">
 <td style="text-align: left;">G</td>
 <td style="text-align: left;">102.0</td>
-<td style="text-align: left;">12.5939837254902</td>
+<td style="text-align: left;">12.593983725490197</td>
 <td style="text-align: left;">1.0916515281066876</td>
 <td style="text-align: left;">9.62924</td>
 <td style="text-align: left;">11.9247</td>
@@ -719,23 +727,23 @@ Table 5: Table of sy_rmag Features
 </tr>
 <tr class="odd">
 <td style="text-align: left;">K</td>
-<td style="text-align: left;">112.0</td>
-<td style="text-align: left;">11.883027776785713</td>
-<td style="text-align: left;">1.7091447231936758</td>
+<td style="text-align: left;">111.0</td>
+<td style="text-align: left;">11.878330729729724</td>
+<td style="text-align: left;">1.7161696862227862</td>
 <td style="text-align: left;">8.75954</td>
 <td style="text-align: left;">10.5964</td>
-<td style="text-align: left;">12.024899999999999</td>
-<td style="text-align: left;">13.1786</td>
+<td style="text-align: left;">11.9848</td>
+<td style="text-align: left;">13.2437</td>
 <td style="text-align: left;">15.6566</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">M</td>
-<td style="text-align: left;">121.0</td>
-<td style="text-align: left;">13.427749586776859</td>
-<td style="text-align: left;">2.0095481312538053</td>
+<td style="text-align: left;">123.0</td>
+<td style="text-align: left;">13.41403333333333</td>
+<td style="text-align: left;">1.9958852223765506</td>
 <td style="text-align: left;">8.46313</td>
 <td style="text-align: left;">11.6746</td>
-<td style="text-align: left;">13.4888</td>
+<td style="text-align: left;">13.3987</td>
 <td style="text-align: left;">15.2717</td>
 <td style="text-align: left;">16.86</td>
 </tr>
@@ -746,36 +754,36 @@ Table 5: Table of sy_rmag Features
 </figure>
 </div>
 </div>
-<div id="fig-sy-rmag" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<div id="fig-sy-rmag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/sy_rmag.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/sy_rmag.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-rmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Box Plot of <code>sy_rmag</code>
+Figure&nbsp;3: Box Plot of <code>sy_rmag</code>
 </figcaption>
 </figure>
 </div>
-<p>Again, from boxplot <a href="#fig-sy-rmag" class="quarto-xref">Figure 3</a>, for <em>M</em>-class of stars, the magnitude of the <em>r</em>-band is higher than the remaining classes at 13.4 at the median.</p>
+<p>Again, from boxplot <a href="#fig-sy-rmag" class="quarto-xref">Figure&nbsp;3</a>, for <em>M</em>-class of stars, the magnitude of the <em>r</em>-band is higher than the remaining classes at 13.4 at the median.</p>
 <div class="cell" data-execution_count="7">
-<div id="tbl-sy-imag" class="cell quarto-float" data-execution_count="7">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-sy-imag" class="cell quarto-float anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 6: Table of sy_imag Features
+Table&nbsp;6: Table of sy_imag Features
 </figcaption>
 <div aria-describedby="tbl-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="7">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 8%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 9%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -837,9 +845,9 @@ Table 6: Table of sy_imag Features
 </tr>
 <tr class="odd">
 <td style="text-align: left;">K</td>
-<td style="text-align: left;">112.0</td>
-<td style="text-align: left;">11.927328133928572</td>
-<td style="text-align: left;">1.5619910548391103</td>
+<td style="text-align: left;">111.0</td>
+<td style="text-align: left;">11.929454513513514</td>
+<td style="text-align: left;">1.5689121042177305</td>
 <td style="text-align: left;">8.42724</td>
 <td style="text-align: left;">10.4417</td>
 <td style="text-align: left;">12.0708</td>
@@ -848,9 +856,9 @@ Table 6: Table of sy_imag Features
 </tr>
 <tr class="even">
 <td style="text-align: left;">M</td>
-<td style="text-align: left;">121.0</td>
-<td style="text-align: left;">12.67205818181818</td>
-<td style="text-align: left;">2.1675341319081154</td>
+<td style="text-align: left;">123.0</td>
+<td style="text-align: left;">12.654621463414633</td>
+<td style="text-align: left;">2.154003160117887</td>
 <td style="text-align: left;">7.75055</td>
 <td style="text-align: left;">10.9702</td>
 <td style="text-align: left;">12.9151</td>
@@ -864,36 +872,36 @@ Table 6: Table of sy_imag Features
 </figure>
 </div>
 </div>
-<div id="fig-sy-imag" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<div id="fig-sy-imag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/sy_imag.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/sy_imag.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-imag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: Box Plot of <code>sy_imag</code>
+Figure&nbsp;4: Box Plot of <code>sy_imag</code>
 </figcaption>
 </figure>
 </div>
-<p>From boxplot <a href="#fig-sy-imag" class="quarto-xref">Figure 4</a>, for all classes of stars, the magnitude at the <em>i</em>-band is similar.</p>
+<p>From boxplot <a href="#fig-sy-imag" class="quarto-xref">Figure&nbsp;4</a>, for all classes of stars, the magnitude at the <em>i</em>-band is similar.</p>
 <div class="cell" data-execution_count="8">
-<div id="tbl-sy-zmag" class="cell quarto-float" data-execution_count="8">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-sy-zmag" class="cell quarto-float anchored" data-execution_count="8">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 7: Table of sy_zmag Features
+Table&nbsp;7: Table of sy_zmag Features
 </figcaption>
 <div aria-describedby="tbl-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="8">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 8%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 9%" />
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 9%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -946,7 +954,7 @@ Table 7: Table of sy_zmag Features
 <td style="text-align: left;">G</td>
 <td style="text-align: left;">102.0</td>
 <td style="text-align: left;">12.9710131372549</td>
-<td style="text-align: left;">0.6918843048279733</td>
+<td style="text-align: left;">0.6918843048279734</td>
 <td style="text-align: left;">9.60484</td>
 <td style="text-align: left;">12.7326</td>
 <td style="text-align: left;">13.046</td>
@@ -955,22 +963,22 @@ Table 7: Table of sy_zmag Features
 </tr>
 <tr class="odd">
 <td style="text-align: left;">K</td>
-<td style="text-align: left;">112.0</td>
-<td style="text-align: left;">11.853661964285717</td>
-<td style="text-align: left;">1.5438856430050727</td>
+<td style="text-align: left;">111.0</td>
+<td style="text-align: left;">11.843012072072069</td>
+<td style="text-align: left;">1.5467492585037919</td>
 <td style="text-align: left;">7.85169</td>
 <td style="text-align: left;">10.6281</td>
-<td style="text-align: left;">12.3442</td>
-<td style="text-align: left;">13.094574999999999</td>
+<td style="text-align: left;">12.0617</td>
+<td style="text-align: left;">13.143149999999999</td>
 <td style="text-align: left;">13.9587</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">M</td>
-<td style="text-align: left;">121.0</td>
-<td style="text-align: left;">12.173695950413222</td>
-<td style="text-align: left;">1.659763323241991</td>
+<td style="text-align: left;">123.0</td>
+<td style="text-align: left;">12.164504146341462</td>
+<td style="text-align: left;">1.6476671077353566</td>
 <td style="text-align: left;">7.76319</td>
-<td style="text-align: left;">11.0226</td>
+<td style="text-align: left;">11.041350000000001</td>
 <td style="text-align: left;">12.7195</td>
 <td style="text-align: left;">13.2565</td>
 <td style="text-align: left;">15.1016</td>
@@ -982,41 +990,29 @@ Table 7: Table of sy_zmag Features
 </figure>
 </div>
 </div>
-<div id="fig-sy-zmag" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<div id="fig-sy-zmag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/sy_zmag.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/sy_zmag.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sy-zmag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: Box Plot of <code>sy_zmag</code>
+Figure&nbsp;5: Box Plot of <code>sy_zmag</code>
 </figcaption>
 </figure>
 </div>
-<p>From boxplot <a href="#fig-sy-zmag" class="quarto-xref">Figure 5</a>, for all classes of stars, the magnitude at the <em>z</em>-band is similar.</p>
+<p>From boxplot <a href="#fig-sy-zmag" class="quarto-xref">Figure&nbsp;5</a>, for all classes of stars, the magnitude at the <em>z</em>-band is similar.</p>
 </section>
 </section>
 <section id="classification-analysis" class="level2">
-<h2>Classification Analysis</h2>
-<div id="2f10b5eb" class="cell" data-execution_count="9">
+<h2 class="anchored" data-anchor-id="classification-analysis">Classification Analysis</h2>
+<div id="7d8e7cf0" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
-<tr class="header" style="text-align: right;">
+<tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">pl_name</th>
 <th data-quarto-table-cell-role="th">st_spectype</th>
@@ -1030,17 +1026,17 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">count</td>
-<td>373</td>
-<td>373</td>
-<td>373.000000</td>
-<td>373.000000</td>
-<td>373.000000</td>
-<td>373.000000</td>
-<td>373.000000</td>
+<td>374</td>
+<td>374</td>
+<td>374.000000</td>
+<td>374.000000</td>
+<td>374.000000</td>
+<td>374.000000</td>
+<td>374.000000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">unique</td>
-<td>219</td>
+<td>218</td>
 <td>4</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1061,7 +1057,7 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 <tr class="even">
 <td data-quarto-table-cell-role="th">freq</td>
 <td>5</td>
-<td>121</td>
+<td>123</td>
 <td>NaN</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -1072,21 +1068,21 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 <td data-quarto-table-cell-role="th">mean</td>
 <td>NaN</td>
 <td>NaN</td>
-<td>16.034040</td>
-<td>13.802282</td>
-<td>12.653515</td>
-<td>12.363340</td>
-<td>12.388862</td>
+<td>16.037280</td>
+<td>13.807714</td>
+<td>12.653811</td>
+<td>12.361053</td>
+<td>12.382959</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">std</td>
 <td>NaN</td>
 <td>NaN</td>
-<td>1.560836</td>
-<td>1.849799</td>
-<td>1.735937</td>
-<td>1.691341</td>
-<td>1.435804</td>
+<td>1.559113</td>
+<td>1.849169</td>
+<td>1.733568</td>
+<td>1.689638</td>
+<td>1.434613</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">min</td>
@@ -1102,10 +1098,10 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 <td data-quarto-table-cell-role="th">25%</td>
 <td>NaN</td>
 <td>NaN</td>
-<td>15.079600</td>
+<td>15.080575</td>
 <td>12.463100</td>
-<td>11.650100</td>
-<td>11.386000</td>
+<td>11.656225</td>
+<td>11.387850</td>
 <td>11.608400</td>
 </tr>
 <tr class="odd">
@@ -1113,20 +1109,20 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 <td>NaN</td>
 <td>NaN</td>
 <td>15.548300</td>
-<td>13.664600</td>
+<td>13.681100</td>
 <td>12.539900</td>
-<td>12.151500</td>
-<td>12.839400</td>
+<td>12.143250</td>
+<td>12.832550</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">75%</td>
 <td>NaN</td>
 <td>NaN</td>
-<td>16.479300</td>
-<td>15.199500</td>
+<td>16.515925</td>
+<td>15.191600</td>
 <td>13.678000</td>
 <td>13.425900</td>
-<td>13.290800</td>
+<td>13.289425</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">max</td>
@@ -1144,24 +1140,24 @@ Figure 5: Box Plot of <code>sy_zmag</code>
 </div>
 </div>
 </div>
-<p>We can now get an informed description of our cleaned data <a href="#tbl-describe_datset" class="quarto-xref">Table 8</a></p>
+<p>We can now get an informed description of our cleaned data <a href="#tbl-describe_datset" class="quarto-xref">Table&nbsp;8</a></p>
 <div class="cell" data-execution_count="10">
-<div id="tbl-describe_datset" class="cell quarto-float" data-execution_count="10">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-describe_datset" class="cell quarto-float anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-describe_datset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 8: Table of Dataset Features
+Table&nbsp;8: Table of Dataset Features
 </figcaption>
 <div aria-describedby="tbl-describe_datset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="10">
-<table class="do-not-create-environment cell" style="width:100%;">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <colgroup>
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1176,16 +1172,16 @@ Table 8: Table of Dataset Features
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">373</td>
-<td style="text-align: left;">373</td>
-<td style="text-align: right;">373</td>
-<td style="text-align: right;">373</td>
-<td style="text-align: right;">373</td>
-<td style="text-align: right;">373</td>
-<td style="text-align: right;">373</td>
+<td style="text-align: left;">374</td>
+<td style="text-align: left;">374</td>
+<td style="text-align: right;">374</td>
+<td style="text-align: right;">374</td>
+<td style="text-align: right;">374</td>
+<td style="text-align: right;">374</td>
+<td style="text-align: right;">374</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">219</td>
+<td style="text-align: left;">218</td>
 <td style="text-align: left;">4</td>
 <td style="text-align: right;">nan</td>
 <td style="text-align: right;">nan</td>
@@ -1204,7 +1200,7 @@ Table 8: Table of Dataset Features
 </tr>
 <tr class="even">
 <td style="text-align: left;">5</td>
-<td style="text-align: left;">121</td>
+<td style="text-align: left;">123</td>
 <td style="text-align: right;">nan</td>
 <td style="text-align: right;">nan</td>
 <td style="text-align: right;">nan</td>
@@ -1214,20 +1210,20 @@ Table 8: Table of Dataset Features
 <tr class="odd">
 <td style="text-align: left;">nan</td>
 <td style="text-align: left;">nan</td>
-<td style="text-align: right;">16.034</td>
-<td style="text-align: right;">13.8023</td>
-<td style="text-align: right;">12.6535</td>
-<td style="text-align: right;">12.3633</td>
-<td style="text-align: right;">12.3889</td>
+<td style="text-align: right;">16.0373</td>
+<td style="text-align: right;">13.8077</td>
+<td style="text-align: right;">12.6538</td>
+<td style="text-align: right;">12.3611</td>
+<td style="text-align: right;">12.383</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">nan</td>
 <td style="text-align: left;">nan</td>
-<td style="text-align: right;">1.56084</td>
-<td style="text-align: right;">1.8498</td>
-<td style="text-align: right;">1.73594</td>
-<td style="text-align: right;">1.69134</td>
-<td style="text-align: right;">1.4358</td>
+<td style="text-align: right;">1.55911</td>
+<td style="text-align: right;">1.84917</td>
+<td style="text-align: right;">1.73357</td>
+<td style="text-align: right;">1.68964</td>
+<td style="text-align: right;">1.43461</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">nan</td>
@@ -1241,29 +1237,29 @@ Table 8: Table of Dataset Features
 <tr class="even">
 <td style="text-align: left;">nan</td>
 <td style="text-align: left;">nan</td>
-<td style="text-align: right;">15.0796</td>
+<td style="text-align: right;">15.0806</td>
 <td style="text-align: right;">12.4631</td>
-<td style="text-align: right;">11.6501</td>
-<td style="text-align: right;">11.386</td>
+<td style="text-align: right;">11.6562</td>
+<td style="text-align: right;">11.3879</td>
 <td style="text-align: right;">11.6084</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">nan</td>
 <td style="text-align: left;">nan</td>
 <td style="text-align: right;">15.5483</td>
-<td style="text-align: right;">13.6646</td>
+<td style="text-align: right;">13.6811</td>
 <td style="text-align: right;">12.5399</td>
-<td style="text-align: right;">12.1515</td>
-<td style="text-align: right;">12.8394</td>
+<td style="text-align: right;">12.1433</td>
+<td style="text-align: right;">12.8325</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">nan</td>
 <td style="text-align: left;">nan</td>
-<td style="text-align: right;">16.4793</td>
-<td style="text-align: right;">15.1995</td>
+<td style="text-align: right;">16.5159</td>
+<td style="text-align: right;">15.1916</td>
 <td style="text-align: right;">13.678</td>
 <td style="text-align: right;">13.4259</td>
-<td style="text-align: right;">13.2908</td>
+<td style="text-align: right;">13.2894</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">nan</td>
@@ -1282,25 +1278,25 @@ Table 8: Table of Dataset Features
 </div>
 </div>
 <p>We can now set our y to be the value we are predicting which is <code>spec_type</code> and our predictors will be the following features: <code>sy_umag</code>, <code>sy_gmag</code>, <code>sy_rmag</code>, <code>sy_imag</code>, <code>sy_zmag</code>. From this we created a 75% train test split to run our data.</p>
-<div id="bcadb8b1" class="cell" data-execution_count="11">
+<div id="ecc8f286" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>st_spectype
-M    0.337165
-K    0.295019
-G    0.275862
-F    0.091954
+M    0.333333
+K    0.283525
+G    0.279693
+F    0.103448
 Name: proportion, dtype: float64</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="12">
-<div id="tbl-y-train-test-values" class="cell quarto-float" data-execution_count="12">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-y-train-test-values" class="cell quarto-float anchored" data-execution_count="12">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-y-train-test-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 9: Table of the y Value Counts of our Train-Test Split
+Table&nbsp;9: Table of the y Value Counts of our Train-Test Split
 </figcaption>
 <div aria-describedby="tbl-y-train-test-values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">proportion</th>
@@ -1308,16 +1304,16 @@ Table 9: Table of the y Value Counts of our Train-Test Split
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0.337165</td>
+<td style="text-align: right;">0.333333</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0.295019</td>
+<td style="text-align: right;">0.283525</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">0.275862</td>
+<td style="text-align: right;">0.279693</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0.091954</td>
+<td style="text-align: right;">0.103448</td>
 </tr>
 </tbody>
 </table>
@@ -1326,25 +1322,25 @@ Table 9: Table of the y Value Counts of our Train-Test Split
 </figure>
 </div>
 </div>
-<p>As seen from <a href="#tbl-y-train-test-values" class="quarto-xref">Table 9</a> we have a pretty spread out class with no major class imbalance.</p>
-<div id="14e5726c" class="cell" data-execution_count="13">
+<p>As seen from <a href="#tbl-y-train-test-values" class="quarto-xref">Table&nbsp;9</a> we have a pretty spread out class with no major class imbalance.</p>
+<div id="36d14ab8" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>fit_time       0.003817
-score_time     0.000981
-test_score     0.674528
-train_score    0.721260
+<pre><code>fit_time       0.008643
+score_time     0.003984
+test_score     0.655370
+train_score    0.669553
 dtype: float64</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="14">
-<div id="tbl-lr-cross_validate" class="cell quarto-float" data-execution_count="14">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-lr-cross_validate" class="cell quarto-float anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lr-cross_validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 10: Table of the Cross Validation Scores from Logistic Regression
+Table&nbsp;10: Table of the Cross Validation Scores from Logistic Regression
 </figcaption>
 <div aria-describedby="tbl-lr-cross_validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="14">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Unnamed: 0</th>
@@ -1354,19 +1350,19 @@ Table 10: Table of the Cross Validation Scores from Logistic Regression
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">fit_time</td>
-<td style="text-align: right;">0.00338473</td>
+<td style="text-align: right;">0.00964465</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">score_time</td>
-<td style="text-align: right;">0.0008708</td>
+<td style="text-align: right;">0.00251288</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">test_score</td>
-<td style="text-align: right;">0.674528</td>
+<td style="text-align: right;">0.65537</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">train_score</td>
-<td style="text-align: right;">0.72126</td>
+<td style="text-align: right;">0.669553</td>
 </tr>
 </tbody>
 </table>
@@ -1376,18 +1372,18 @@ Table 10: Table of the Cross Validation Scores from Logistic Regression
 </div>
 </div>
 <section id="confusion-matrix" class="level3">
-<h3>Confusion Matrix</h3>
+<h3 class="anchored" data-anchor-id="confusion-matrix">Confusion Matrix</h3>
 <p>One way to get a better understanding of the errors is by looking at how well the classifier is identifying each class. Which classes are most frequently confused with each other. Overall accuracy, along with class-specific metrics like precision, recall, and F1-score for multi-class classification problems.</p>
-<p>It’s easier to demonstrate evaluation metrics using an explicit validation set instead of using cross-validation. So let’s create a validation set as seen below in <a href="#tbl-confusion-matrix" class="quarto-xref">Table 11</a>.</p>
+<p>It’s easier to demonstrate evaluation metrics using an explicit validation set instead of using cross-validation. So let’s create a validation set as seen below in <a href="#tbl-confusion-matrix" class="quarto-xref">Table&nbsp;11</a>.</p>
 <div class="cell" data-execution_count="16">
-<div id="tbl-confusion-matrix" class="cell quarto-float" data-execution_count="16">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-confusion-matrix" class="cell quarto-float anchored" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-confusion-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 11: Table of the Logistic Regression Confusion Matrix
+Table&nbsp;11: Table of the Logistic Regression Confusion Matrix
 </figcaption>
 <div aria-describedby="tbl-confusion-matrix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="16">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">0</th>
@@ -1399,27 +1395,27 @@ Table 11: Table of the Logistic Regression Confusion Matrix
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">22</td>
+<td style="text-align: right;">19</td>
 </tr>
 </tbody>
 </table>
@@ -1428,27 +1424,27 @@ Table 11: Table of the Logistic Regression Confusion Matrix
 </figure>
 </div>
 </div>
-<p>For better interpretation, we will visualize the confusion matrix <a href="#fig-cm" class="quarto-xref">Figure 6</a>.</p>
-<div id="fig-cm" class="quarto-figure quarto-figure-center quarto-float">
-<figure class="quarto-float quarto-float-fig">
+<p>For better interpretation, we will visualize the confusion matrix <a href="#fig-cm" class="quarto-xref">Figure&nbsp;6</a>.</p>
+<div id="fig-cm" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../results/figures/confusion_matrix.png" class="img-fluid" style="width:90.0%" />
+<img src="../results/figures/confusion_matrix.png" class="img-fluid figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: Visualization of the Confusion Matrix
+Figure&nbsp;6: Visualization of the Confusion Matrix
 </figcaption>
 </figure>
 </div>
-<p>We can now calculate our accuracy score given by <a href="#tbl-accuracy-score" class="quarto-xref">Table 12</a> using our <code>Random Forest Classifier</code> given below.</p>
+<p>We can now calculate our accuracy score given by <a href="#tbl-accuracy-score" class="quarto-xref">Table&nbsp;12</a> using our <code>Random Forest Classifier</code> given below.</p>
 <div class="cell" data-execution_count="17">
-<div id="tbl-accuracy-score" class="cell quarto-float" data-execution_count="17">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-accuracy-score" class="cell quarto-float anchored" data-execution_count="17">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-accuracy-score-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 12: Table of Accuracy Score From Random Forest Classifier
+Table&nbsp;12: Table of Accuracy Score From Random Forest Classifier
 </figcaption>
 <div aria-describedby="tbl-accuracy-score-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="17">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">0</th>
@@ -1460,27 +1456,27 @@ Table 12: Table of Accuracy Score From Random Forest Classifier
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">21</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">22</td>
+<td style="text-align: right;">19</td>
 </tr>
 </tbody>
 </table>
@@ -1489,32 +1485,32 @@ Table 12: Table of Accuracy Score From Random Forest Classifier
 </figure>
 </div>
 </div>
-<p>From this we can provide cross validation scores given in <a href="#tbl-rfc-cross-validate" class="quarto-xref">Table 13</a> using our <code>Random Forest Classifier</code>.</p>
-<div id="fb828e85" class="cell" data-execution_count="18">
+<p>From this we can provide cross validation scores given in <a href="#tbl-rfc-cross-validate" class="quarto-xref">Table&nbsp;13</a> using our <code>Random Forest Classifier</code>.</p>
+<div id="bb225608" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-stderr">
-<pre><code>/home/baron/vanc/DSCI-310-Group-16/venv/dsci/lib/python3.11/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but RandomForestClassifier was fitted without feature names
+<pre><code>/Applications/miniconda3/envs/dsci-310-group16/lib/python3.12/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but RandomForestClassifier was fitted without feature names
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Accuracy: 0.29464285714285715</code></pre>
+<pre><code>Accuracy: 0.3185840707964602</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="18">
-<pre><code>fit_time       0.174118
-score_time     0.005711
-test_score     0.827504
-train_score    0.987551
+<pre><code>fit_time       0.380206
+score_time     0.013851
+test_score     0.858563
+train_score    0.996168
 dtype: float64</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="19">
-<div id="tbl-rfc-cross-validate" class="cell quarto-float" data-execution_count="19">
-<figure class="quarto-float quarto-float-tbl">
+<div id="tbl-rfc-cross-validate" class="cell quarto-float anchored" data-execution_count="19">
+<figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rfc-cross-validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 13: Table of the Cross Validation Scores from Random Forest Classifier
+Table&nbsp;13: Table of the Cross Validation Scores from Random Forest Classifier
 </figcaption>
 <div aria-describedby="tbl-rfc-cross-validate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="19">
-<table class="do-not-create-environment cell">
+<table class="do-not-create-environment cell table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Unnamed: 0</th>
@@ -1524,19 +1520,19 @@ Table 13: Table of the Cross Validation Scores from Random Forest Classifier
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">fit_time</td>
-<td style="text-align: right;">0.00338473</td>
+<td style="text-align: right;">0.00964465</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">score_time</td>
-<td style="text-align: right;">0.0008708</td>
+<td style="text-align: right;">0.00251288</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">test_score</td>
-<td style="text-align: right;">0.674528</td>
+<td style="text-align: right;">0.65537</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">train_score</td>
-<td style="text-align: right;">0.72126</td>
+<td style="text-align: right;">0.669553</td>
 </tr>
 </tbody>
 </table>
@@ -1545,16 +1541,19 @@ Table 13: Table of the Cross Validation Scores from Random Forest Classifier
 </figure>
 </div>
 </div>
-<p>Ultimately from our validation scores, we achieve a much higher test score from our scaled data with the RandomForestClassifier model of 0.675 compared to LogisticRegression model of 0.675. However our accuracy score is quite low at 0.</p>
+<p>Ultimately from our validation scores, we achieve a much higher test score from our scaled data with the RandomForestClassifier model of 0.655 compared to LogisticRegression model of 0.655. However our accuracy score is quite low at 0.</p>
 </section>
 </section>
 <section id="discussion" class="level2">
-<h2>Discussion</h2>
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Our model yielded pretty average results with final overall accuracy of 0. This model is not good enough for an automated stellar classification process. In addition, our model can only classify stars into four classes due to the limited sample size. However these four classes make up about 99.8% of stellar population <span class="citation" data-cites="ledrew2001real">(<a href="#ref-ledrew2001real" role="doc-biblioref">Ledrew 2001</a>)</span> so being unable to classify stars into remaining three classes isn’t as big of an issue. Looking at the confusion matrix, we can see that our model tend to classify stars as cooler than they actually are (e.g: nine stars were classified as <em>G</em> but were actually <em>F</em> class). In order to improve this model, a larger sample size would help like using the Sloan Digital Sky Survey dataset instead. Another way to improve the model is to explore other classification methods such as k nearest neighbours. Finally, using another photometric system such as UBV could help since the bands are more seperated resulting in larger difference in magnitudes between star classes. More research into other classification methods could most likely yield higher accuracy.</p>
 </section>
 <section id="references" class="level2 unnumbered">
-<h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-duan2009automated" class="csl-entry" role="listitem">
 Duan, Fu-Qing, Rong Liu, Ping Guo, Ming-Quan Zhou, and Fu-Chao Wu. 2009. <span>“Automated Spectral Classification Using Template Matching.”</span> <em>Research in Astronomy and Astrophysics</em> 9 (3): 341.
 </div>
@@ -1579,12 +1578,9 @@ Pedregosa, Fabian, Gaël Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand
 <div id="ref-van1995python" class="csl-entry" role="listitem">
 Van Rossum, Guido, and Fred L Drake Jr. 1995. <span>“Python Tutorial.”</span> Centrum voor Wiskunde en Informatica Amsterdam, The Netherlands.
 </div>
-</div>
-</section>
-
-</main>
+</div></section></div></main>
 <!-- /main column -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1973,6 +1969,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 </div> <!-- /content -->
 
-</body>
 
-</html>
+
+
+</body></html>
