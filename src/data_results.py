@@ -33,7 +33,7 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     only_stars_data = pd.read_csv(f"{cleaned_input_data}")
 
     # Create and save this as a table
-    describe = only_stars_data.describe(include="all")
+    describe = only_stars_data.describe(include="all").round(2)
     pd.DataFrame(describe).to_csv(f"{results_csv_dir}/description_df.csv", index=False)
 
     # Setting y to our predicted variable: st_spectype
@@ -48,7 +48,8 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     )
 
     # Created and saved a y value count df
-    pd.DataFrame(y_train.value_counts(normalize=True)).to_csv(
+    y_values = pd.DataFrame(y_train.value_counts(normalize=True)).round(2)
+    y_values.to_csv(
         f"{results_csv_dir}/y-values_df.csv", index=False
     )
 
@@ -56,7 +57,7 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     pipe = make_pipeline(StandardScaler(), LogisticRegression())
     lr_df = pd.DataFrame(
         cross_validate(pipe, X_train, y_train, return_train_score=True)
-    ).mean()
+    ).mean().round(2)
     lr_df.to_csv(f"{results_csv_dir}/logistic_regression_df.csv")
 
     # RandomForest Classifier
@@ -70,13 +71,14 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     pipe2.fit(X_train, y_train)
     rfc_df = pd.DataFrame(
         cross_validate(pipe2, X_train, y_train, return_train_score=True)
-    ).mean()
+    ).mean().round(2)
     rfc_df.to_csv(f"{results_csv_dir}/random_forest_classifier_df.csv")
 
     # Calculating the accuracy of our predictions made on the test set
     predictions = rfc.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
-    pd.DataFrame([accuracy], columns=["rf_accuracy"]).to_csv(
+    acc_values = pd.DataFrame([accuracy], columns=["rf_accuracy"]).round(2)
+    acc_values.to_csv(
         f"{results_csv_dir}/accuracy.csv", index=False
     )
 
