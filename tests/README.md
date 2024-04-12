@@ -1,7 +1,7 @@
 ## Tests for functions used in data analysis
 
 ### Running the tests
-The test suite can be run via:
+The test suite can be run from the project root directory via:
 
 ```
 pytest tests/*
