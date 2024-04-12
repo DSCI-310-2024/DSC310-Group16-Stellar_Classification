@@ -1,0 +1,13 @@
+services:
+  analysis-env:
+    image: avietcong/dsci310-group16:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/dsci/DSCI310-Group16-Stellar_Classification 
+    environment:
+      PASSWORD: password
+    deploy:
+      resources:
+        limits:
+          memory: 8G
