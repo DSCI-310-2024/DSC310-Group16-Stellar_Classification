@@ -59,6 +59,7 @@ def test_fetch_data_downloads_data_from_default_url(output_path, columns):
     fetch_data(None, output_path, columns)
     assert os.path.exists(output_path)
 
+
 def test_fetch_data_returns_df_with_columns_that_are_given(output_path, columns):
     df = fetch_data(None, output_path, columns)
     assert list(df.columns) == columns

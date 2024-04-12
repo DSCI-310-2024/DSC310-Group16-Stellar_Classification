@@ -51,7 +51,9 @@ def test_csv_saves_to_dir(data, csv_dir, bp_dir):
         f"{csv_dir}/{column_star}.csv"
     ), "Csv file was not saved properly!"
 
+
 if False:
+
     def test_csv_matches(data, csv_dir, bp_dir):
         # Test 2: Makes sure csv matches the expected test data given
         column_moon = "column_moon"
@@ -70,14 +72,19 @@ def test_bp_saves_to_dir(data, csv_dir, bp_dir):
         f"{bp_dir}/{column_sun}.png"
     ), "Boxplot file was not saved properly"
 
+
 if False:
+
     def test_bp_matches(data, csv_dir, bp_dir):
         # Test 4: Ensures boxplot matches the expected test data given
         column_moon = "column_moon"
         make_boxplot_and_table(data, column_moon, csv_dir, bp_dir)
         dir_bp_read = plt.imread(f"{bp_dir}/{column_moon}.png")
         test_bp_data = (
-            data[["st_spectype", {column_moon}]].groupby("st_spectype").describe().boxplot()
+            data[["st_spectype", {column_moon}]]
+            .groupby("st_spectype")
+            .describe()
+            .boxplot()
         )
         test_bp_fig = test_bp_data.figure.savefig("function_boxplot.png")
         test_bp_read = plt.imread
