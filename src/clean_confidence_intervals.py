@@ -1,4 +1,3 @@
-import pandas as pd
 
 def clean_confidence_intervals(exoplanet_data):
     """

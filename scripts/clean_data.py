@@ -7,7 +7,7 @@ import pandas as pd
 
 # Import clean_confidence_intervals function from the src folder
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from clean_confidence_intervals import clean_confidence_intervals
+from src.clean_confidence_intervals import clean_confidence_intervals
 
 
 @click.command()
