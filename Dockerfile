@@ -1,6 +1,8 @@
 # start from the Jupyter scipy-notebook as a base
 FROM quay.io/jupyter/scipy-notebook:2024-02-24
 
+USER root
+
 # install packages python from conda forge channel
 RUN conda install -c conda-forge -y python=3.11 
 
