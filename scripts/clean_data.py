@@ -7,12 +7,14 @@ import pandas as pd
 
 # Import clean_confidence_intervals function from the src folder
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from clean_confidence_intervals import clean_confidence_intervals
+from src.clean_confidence_intervals import clean_confidence_intervals
 
 
 @click.command()
 @click.option("--input_file", type=str, default="data/raw/planet-systems.csv")
 @click.option("--output_file", type=str, default="data/processed/planet-systems.csv")
+
+
 def clean_data(input_file, output_file):
     """
     Reads data from the input file, performs data cleaning and preprocessing,

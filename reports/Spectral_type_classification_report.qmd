@@ -363,14 +363,14 @@ using our `Random Forest Classifier` given below.
 #| label: tbl-accuracy-score
 #| tbl-cap: Table of Accuracy Score From Random Forest Classifier
 
-rfc_accuracy = pd.read_csv("../results/tables/confusion_matrix.csv")
+rfc_accuracy = pd.read_csv("../results/tables/accuracy.csv")
 acc_value = rfc_accuracy.iloc[0,0]
 rounded_acc = round(acc_value, 3)
 Markdown(rfc_accuracy.to_markdown(index = False))
 ```
 
 From this we can provide cross validation scores given in
-@tbl-rfc-cross-validate using our `Random Forest Classifier`.
+@tbl-rfc-cross-validate using our `RandomForestClassifier` model.
 
 ```{python}
 # RandomForest Classifier
@@ -392,15 +392,15 @@ pd.DataFrame(cross_validate(pipe2, X_train, y_train, return_train_score=True)).m
 #| label: tbl-rfc-cross-validate
 #| tbl-cap: Table of the Cross Validation Scores from Random Forest Classifier
 
-rfc_cvs = pd.read_csv("../results/tables/logistic_regression_df.csv")
+rfc_cvs = pd.read_csv("../results/tables/random_forest_classifier_df.csv")
 rfc_value = rfc_cvs.iloc[2,1]
 rounded_rfc = round(rfc_value, 3)
 Markdown(rfc_cvs.to_markdown(index = False))
 ```
 
-Ultimately from our validation scores, we achieve a much higher test
-score from our scaled data with the RandomForestClassifier model of
-`{python} rounded_rfc` compared to LogisticRegression model of `{python} rounded_lr`. However our accuracy score is quite low at `{python} rounded_acc`.
+From our validation scores, we achieve a much higher test
+score from our scaled data with the `RandomForestClassifier` model of
+`{python} rounded_rfc` compared to `LogisticRegression` model of `{python} rounded_lr`. However our accuracy score is quite low at `{python} rounded_acc`.
 
 
 ## Discussion
@@ -415,12 +415,18 @@ of an issue. Looking at the confusion matrix, we can see that our model
 tend to classify stars as cooler than they actually are (e.g: nine stars
 were classified as *G* but were actually *F* class). In order to improve
 this model, a larger sample size would help like using the Sloan Digital
-Sky Survey dataset instead. Another way to improve the model is to
-explore other classification methods such as k nearest neighbours.
+Sky Survey dataset instead. We could also increase our sample size by imputing 
+our NA values instead of simply removing them, which resulted in a loss of 
+2200 observations.Another way to improve the model is to explore other 
+classification methods such as k nearest neighbours.
 Finally, using another photometric system such as UBV could help since
 the bands are more seperated resulting in larger difference in
 magnitudes between star classes. More research into other classification
 methods could most likely yield higher accuracy.
 
+
+## Conclusion
+
+Ultimately, we found that our `RandomForestClassifier` model was the most successful with a cross validation score of `{python} rounded_lr`. Our `LogisticRegression` model although not as successsful, seemed to consistently predict true positives as seen through our confusion matrix in @tbl-confusion-matrix. However, upon calculating the accuracy our `RandomForestClassifier` was extremely low at around only `{python} rounded_acc`, which leads us to believe our model is not ready to be of use without further improvements.
 
 ## References

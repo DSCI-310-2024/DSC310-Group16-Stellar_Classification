@@ -24,7 +24,28 @@ from sklearn.preprocessing import StandardScaler
 )
 @click.option("--results_csv_dir", type=str, default="results/tables")
 @click.option("--conf_matrix_png_dir", type=str, default="results/figures")
+
+
 def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
+    """
+    Evaluates the performance of Logistic Regression and RandomForest Classifier models 
+    on a dataset of stellar magnitudes. It processes cleaned data, performs statistical 
+    analysis, and generates model evaluation metrics including cross-validation scores 
+    and confusion matrices.
+
+    The script performs the following:
+    - Reads cleaned stellar data from a specified CSV file.
+    - Summarizes the data and saves the description to a CSV file.
+    - Prepares the data for modeling, including train-test splits.
+    - Trains and validates Logistic Regression and RandomForest models, 
+       saving performance metrics and model evaluations to CSV files.
+    - Generates and saves a confusion matrix as a PNG file for visual evaluation of 
+       model predictions.
+
+    Outputs are saved in designated directories for tables and figures, ensuring that 
+    all generated analysis and evaluation metrics are organized and accessible.
+    """
+
     print("### Running data-results.py ###")
     # create folders if they don't exist
     [os.makedirs(dir, exist_ok=True) for dir in [results_csv_dir, conf_matrix_png_dir]]
