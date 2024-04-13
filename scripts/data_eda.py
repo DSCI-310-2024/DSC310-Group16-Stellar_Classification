@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from src.boxplot_table_function import make_boxplot_and_table
+from classifyspectraltype import make_boxplot_and_table
 
 
 # Main function
@@ -20,11 +20,11 @@ from src.boxplot_table_function import make_boxplot_and_table
 @click.option("--box_plot_dir", type=str, default="results/figures")
 def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
     """
-    Processes cleaned star data to generate visual and statistical analyses. 
-    It reads a dataset from a specified path, produces a histogram of stellar 
-    classifications, and creates detailed box plots and summary tables for 
-    various magnitude measurements across specified bands. 
-    The generated figures and tables are saved to designated directories for 
+    Processes cleaned star data to generate visual and statistical analyses.
+    It reads a dataset from a specified path, produces a histogram of stellar
+    classifications, and creates detailed box plots and summary tables for
+    various magnitude measurements across specified bands.
+    The generated figures and tables are saved to designated directories for
     further exploration and analysis.
     """
     # create dirs if they don't exist

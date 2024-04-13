@@ -1,13 +1,9 @@
 import os
-import sys
 from pathlib import Path
 
 import click
 import pandas as pd
-
-# Import clean_confidence_intervals function from the src folder
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from src.clean_confidence_intervals import clean_confidence_intervals
+from classifyspectraltype import clean_confidence_intervals
 
 
 @click.command()
@@ -48,7 +44,9 @@ def clean_data(input_file, output_file):
     exoplanet_data = exoplanet_data.loc[
         exoplanet_data["st_spectype"].isin(["O", "B", "A", "F", "G", "K", "M"])
     ]
-    exoplanet_data["st_spectype"] = exoplanet_data["st_spectype"].astype("category").round(2)
+    exoplanet_data["st_spectype"] = (
+        exoplanet_data["st_spectype"].astype("category").round(2)
+    )
 
     # Saves the cleaned and preprocessed data to the output file
     exoplanet_data.to_csv(output_file, index=False)

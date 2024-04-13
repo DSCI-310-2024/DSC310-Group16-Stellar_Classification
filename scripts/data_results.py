@@ -24,25 +24,23 @@ from sklearn.preprocessing import StandardScaler
 )
 @click.option("--results_csv_dir", type=str, default="results/tables")
 @click.option("--conf_matrix_png_dir", type=str, default="results/figures")
-
-
 def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
     """
-    Evaluates the performance of Logistic Regression and RandomForest Classifier models 
-    on a dataset of stellar magnitudes. It processes cleaned data, performs statistical 
-    analysis, and generates model evaluation metrics including cross-validation scores 
+    Evaluates the performance of Logistic Regression and RandomForest Classifier models
+    on a dataset of stellar magnitudes. It processes cleaned data, performs statistical
+    analysis, and generates model evaluation metrics including cross-validation scores
     and confusion matrices.
 
     The script performs the following:
     - Reads cleaned stellar data from a specified CSV file.
     - Summarizes the data and saves the description to a CSV file.
     - Prepares the data for modeling, including train-test splits.
-    - Trains and validates Logistic Regression and RandomForest models, 
+    - Trains and validates Logistic Regression and RandomForest models,
        saving performance metrics and model evaluations to CSV files.
-    - Generates and saves a confusion matrix as a PNG file for visual evaluation of 
+    - Generates and saves a confusion matrix as a PNG file for visual evaluation of
        model predictions.
 
-    Outputs are saved in designated directories for tables and figures, ensuring that 
+    Outputs are saved in designated directories for tables and figures, ensuring that
     all generated analysis and evaluation metrics are organized and accessible.
     """
 
@@ -70,15 +68,15 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
 
     # Created and saved a y value count df
     y_values = pd.DataFrame(y_train.value_counts(normalize=True)).round(2)
-    y_values.to_csv(
-        f"{results_csv_dir}/y-values_df.csv", index=False
-    )
+    y_values.to_csv(f"{results_csv_dir}/y-values_df.csv", index=False)
 
     # Logistic Regression cross validation and saved to csv
     pipe = make_pipeline(StandardScaler(), LogisticRegression())
-    lr_df = pd.DataFrame(
-        cross_validate(pipe, X_train, y_train, return_train_score=True)
-    ).mean().round(2)
+    lr_df = (
+        pd.DataFrame(cross_validate(pipe, X_train, y_train, return_train_score=True))
+        .mean()
+        .round(2)
+    )
     lr_df.to_csv(f"{results_csv_dir}/logistic_regression_df.csv")
 
     # RandomForest Classifier
@@ -90,18 +88,18 @@ def main(cleaned_input_data, results_csv_dir, conf_matrix_png_dir):
 
     # RandomForest Classifier cross validation and saved to csv
     pipe2.fit(X_train, y_train)
-    rfc_df = pd.DataFrame(
-        cross_validate(pipe2, X_train, y_train, return_train_score=True)
-    ).mean().round(2)
+    rfc_df = (
+        pd.DataFrame(cross_validate(pipe2, X_train, y_train, return_train_score=True))
+        .mean()
+        .round(2)
+    )
     rfc_df.to_csv(f"{results_csv_dir}/random_forest_classifier_df.csv")
 
     # Calculating the accuracy of our predictions made on the test set
     predictions = rfc.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
     acc_values = pd.DataFrame([accuracy], columns=["rf_accuracy"]).round(2)
-    acc_values.to_csv(
-        f"{results_csv_dir}/accuracy.csv", index=False
-    )
+    acc_values.to_csv(f"{results_csv_dir}/accuracy.csv", index=False)
 
     # Creating a validation set for our confusion matrix
     X_train_2, X_valid, y_train_2, y_valid = train_test_split(
