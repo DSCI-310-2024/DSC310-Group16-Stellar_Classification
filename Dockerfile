@@ -5,10 +5,10 @@ FROM quay.io/jupyter/scipy-notebook:2024-02-24
 RUN conda install -c conda-forge -y python=3.11 
 
 # install dependencies
-RUN pip install classifyspectraltype=0.2.0 \
-    pyarrow=15.0.1 \
-    jupyterlab=4.0.13 \
-    click=8.1.7
+RUN pip install classifyspectraltype==0.2.0 \
+    pyarrow==15.0.1 \
+    jupyterlab==4.0.13 \
+    click==8.1.7
 
 # create the directory /home/dsci
 RUN mkdir -p /home/dsci
