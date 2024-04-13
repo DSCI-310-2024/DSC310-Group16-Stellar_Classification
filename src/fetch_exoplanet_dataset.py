@@ -10,7 +10,9 @@ def fetch_data(
     output_path: str,
     columns: list[str],
 ) -> pd.DataFrame:
-    """Download dataset from the specified url and save it to the provided path.
+    """
+    Purpose:
+    Download dataset from the specified url and save it to the provided path.
 
     This function is capable of downloading datasets from exoplanetarchive.
 
@@ -20,13 +22,18 @@ def fetch_data(
     Documentation for constructing a TPA call to retrieve the dataset:
     https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PS
 
-    Args:
-        url (str): The URL from which to fetch the data.
-
-        output_path (str): The file path where the fetched raw data will be saved.
+    Parameters:
+    - base_url (str): The URL from which to fetch the data.
+    - output_path (str): The file path where the fetched raw data will be saved. This 
+        specifies the location on the local filesystem where the downloaded dataset should be stored.
+    - columns (list[str]): A list of column names to be fetched from the dataset. 
+        This parameter defines which attributes or fields of the data should be included 
+        in the query and subsequently in the returned DataFrame. For instance, if accessing 
+        a database with many columns, this list explicitly states which columns to retrieve, 
+        optimizing the fetching process and ensuring that only relevant data is loaded.
 
     Returns:
-        pd.DataFrame: A pandas DataFrame containing the fetched data.
+    - pd.DataFrame: A pandas DataFrame containing the fetched data.
 
     """
     # define the directories where we will store the data
