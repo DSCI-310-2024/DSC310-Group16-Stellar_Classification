@@ -1,17 +1,14 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import (cross_validate,
-                                     train_test_split)
+from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 
 def split_cross_val(preprocessed_data, target, split=0.75, folds=5):
     """
-    Purpose:
-    Splitting the data and calculate the cross validation results for Random forests 
-    and logistic regression models.
+    Splitting the data and calculate the cross validation results for Random forests and logistic regression models.
 
     Parameters:
     - preprocessed_data: csv, cleaned and preprocessed data

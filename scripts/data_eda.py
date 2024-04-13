@@ -18,8 +18,6 @@ from src.boxplot_table_function import make_boxplot_and_table
 @click.option("--eda_png_dir", type=str, default="results/figures")
 @click.option("--eda_csv_dir", type=str, default="results/figures")
 @click.option("--box_plot_dir", type=str, default="results/figures")
-
-
 def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
     """
     Processes cleaned star data to generate visual and statistical analyses. 
@@ -53,30 +51,12 @@ def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
 
     plt.savefig(f"{eda_png_dir}/star_count_hist.png")
 
-    # create and save the table and boxplot and boxplot for sy_umag
-    make_boxplot_and_table(
-        data=data, column_name="sy_umag", csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
-    )
+    column_names = ["sy_umag", "sy_gmag", "sy_rmag", "sy_imag", "sy_zmag"]
 
-    # create and save the table and boxplot and boxplot for sy_gmag
-    make_boxplot_and_table(
-        data=data, column_name="sy_gmag", csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
-    )
-
-    # create and save the table and boxplot for sy_rmag
-    make_boxplot_and_table(
-        data=data, column_name="sy_rmag", csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
-    )
-
-    # create and save the table and boxplot for sy_imag
-    make_boxplot_and_table(
-        data=data, column_name="sy_imag", csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
-    )
-
-    # create and save the table and boxplot for sy_zmag
-    make_boxplot_and_table(
-        data=data, column_name="sy_zmag", csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
-    )
+    for col in column_names:
+        make_boxplot_and_table(
+            data=data, column_name=col, csv_dir=eda_csv_dir, box_plot_dir=box_plot_dir
+        )
 
 
 if __name__ == "__main__":
