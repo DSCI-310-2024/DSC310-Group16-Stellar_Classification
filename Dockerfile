@@ -1,5 +1,5 @@
 # Start from the Jupyter scipy-notebook as a base
-FROM nginx:alpine
+FROM quay.io/jupyter/scipy-notebook:2024-02-24
 
 # Install packages from conda forge channel
 RUN conda install -c conda-forge -y\

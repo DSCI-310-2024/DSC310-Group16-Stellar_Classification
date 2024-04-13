@@ -1,5 +1,5 @@
 ,0
-fit_time,0.1764732837677002
-score_time,0.006702947616577149
-test_score,0.8275036284470246
-train_score,0.9875506072874494
+fit_time,0.34
+score_time,0.01
+test_score,0.86
+train_score,1.0
