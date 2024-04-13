@@ -25,7 +25,7 @@ def output_path():
     return "data/raw/test_data.csv"
 
 
-# Tests if function downloads data and creates a DataFrame, 
+# Tests if function downloads data and creates a DataFrame,
 # and ensures the specified output CSV file exists.
 def test_fetch_data_downloads_data(base_url, output_path, columns):
     df = fetch_data(base_url, output_path, columns)
