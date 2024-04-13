@@ -268,49 +268,28 @@ from NASA, containing information about measurements of planets and
 stars. We are interested in the spectral type of stars given a subset of
 these measurements.
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1515}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1414}}@{}}
+\begin{longtable}[]{@{}ll@{}}
 
 \caption{\label{tbl-read-data}Table of our Initial Data}
 
 \tabularnewline
 
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-pl\_name
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-st\_spectype
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-sy\_umagstr
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-sy\_gmagstr
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-sy\_rmagstr
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-sy\_imagstr
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-sy\_zmagstr
-\end{minipage} \\
+pl\_name & st\_spectype \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-OGLE-TR-10 b & nan & nan & nan & nan & nan & nan \\
-BD-08 2823 b & K3 V & nan & nan & nan & nan & nan \\
-BD-08 2823 c & K3 V & nan & nan & nan & nan & nan \\
-HR 8799 c & A5 V & nan & nan & nan & nan & nan \\
-HD 104985 b & nan & nan & nan & nan & nan & nan \\
-4 UMa b & K1 III & nan & nan & nan & nan & nan \\
-HD 104985 b & G9 III & nan & nan & nan & nan & nan \\
-kap CrB b & nan & nan & nan & nan & nan & nan \\
-kap CrB b & nan & nan & nan & nan & nan & nan \\
-kap CrB b & nan & nan & nan & nan & nan & nan \\
+OGLE-TR-10 b & nan \\
+BD-08 2823 b & K3 V \\
+BD-08 2823 c & K3 V \\
+HR 8799 c & A5 V \\
+HD 104985 b & nan \\
+4 UMa b & K1 III \\
+HD 104985 b & G9 III \\
+kap CrB b & nan \\
+kap CrB b & nan \\
+kap CrB b & nan \\
 
 \end{longtable}
 
@@ -874,8 +853,8 @@ As seen from Table~\ref{tbl-y-train-test-values} we have a pretty spread
 out class with no major class imbalance.
 
 \begin{verbatim}
-fit_time       0.003659
-score_time     0.000918
+fit_time       0.033493
+score_time     0.004918
 test_score     0.674528
 train_score    0.721260
 dtype: float64
@@ -977,7 +956,7 @@ Table~\ref{tbl-rfc-cross-validate} using our
 \texttt{Random\ Forest\ Classifier}.
 
 \begin{verbatim}
-/home/baron/vanc/DSCI-310-Group-16/venv/dsci/lib/python3.11/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but RandomForestClassifier was fitted without feature names
+/Applications/miniconda3/envs/dsci-310-group16/lib/python3.12/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but RandomForestClassifier was fitted without feature names
   warnings.warn(
 \end{verbatim}
 
@@ -986,8 +965,8 @@ Accuracy: 0.29464285714285715
 \end{verbatim}
 
 \begin{verbatim}
-fit_time       0.175156
-score_time     0.005735
+fit_time       0.794912
+score_time     0.029600
 test_score     0.827504
 train_score    0.987551
 dtype: float64
