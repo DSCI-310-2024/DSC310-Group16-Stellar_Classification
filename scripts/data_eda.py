@@ -1,6 +1,3 @@
-# This script will create a PNG for our star count as well as the tables and
-# corresponding box plots of the magnitudes of bands for each star
-
 # Imports
 import os
 import sys
@@ -21,7 +18,17 @@ from src.boxplot_table_function import make_boxplot_and_table
 @click.option("--eda_png_dir", type=str, default="results/figures")
 @click.option("--eda_csv_dir", type=str, default="results/figures")
 @click.option("--box_plot_dir", type=str, default="results/figures")
+
+
 def main(cleaned_input_data, eda_png_dir, eda_csv_dir, box_plot_dir):
+    """
+    Processes cleaned star data to generate visual and statistical analyses. 
+    It reads a dataset from a specified path, produces a histogram of stellar 
+    classifications, and creates detailed box plots and summary tables for 
+    various magnitude measurements across specified bands. 
+    The generated figures and tables are saved to designated directories for 
+    further exploration and analysis.
+    """
     # create dirs if they don't exist
     [
         os.makedirs(dir, exist_ok=True)

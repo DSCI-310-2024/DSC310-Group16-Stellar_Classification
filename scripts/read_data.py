@@ -11,6 +11,12 @@ from src.fetch_exoplanet_dataset import fetch_data
 @click.option("--url", type=str)
 @click.option("--output_path", type=str)
 def read_data(url, output_path):
+    """
+    Provides a command-line interface to download and store exoplanet data.
+    It uses predefined columns to fetch data from a specified URL and save it to a given 
+    output path. The script prints updates about its execution status and returns the 
+    downloaded dataset as a pandas DataFrame.
+    """
     print(f"### Running {os.path.basename(__file__)} ###")
 
     # define the columns we want do keep in the dataset
