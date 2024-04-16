@@ -4,12 +4,14 @@ FROM quay.io/jupyter/scipy-notebook:2024-02-24
 USER root
 
 # install packages python from conda forge channel
-RUN conda install -c conda-forge -y python=3.11 
+RUN conda install -c conda-forge -y python=3.11 \
+    quarto=0.1.0
 
 # install dependencies
 RUN pip install classifyspectraltype==0.2.0 \
     pyarrow==15.0.1 \
     click==8.1.7
+    
 
 # create the directory /home/dsci
 RUN mkdir -p /home/dsci
@@ -22,12 +24,6 @@ RUN git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classific
 
 # switch to the project directory
 WORKDIR /home/dsci/DSCI310-Group16-Stellar_Classification
-
-# install quarto
-RUN export QUARTO_VERSION="1.4.551"
-RUN sudo curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
-RUN sudo apt-get -y install gdebi-core
-RUN sudo gdebi quarto-linux-amd64.deb
 
 # install make 
 RUN apt-get update && apt-get install -y make lmodern
