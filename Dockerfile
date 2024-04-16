@@ -23,5 +23,11 @@ RUN git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classific
 # switch to the project directory
 WORKDIR /home/dsci/DSCI310-Group16-Stellar_Classification
 
+# install quarto
+RUN export QUARTO_VERSION="1.4.551"
+RUN sudo curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
+RUN sudo apt-get -y install gdebi-core
+RUN sudo gdebi quarto-linux-amd64.deb
+
 # install make 
 RUN apt-get update && apt-get install -y make lmodern
