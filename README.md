@@ -20,7 +20,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
    `git clone https://github.com/DSCI-310-2024/DSCI310-Group16-Stellar_Classification.git`
 
-6. Go into that directory using the command `cd DSCI310-Group16-Stellar_Classification`
+6. Change to that directory using the command `cd DSCI310-Group16-Stellar_Classification`
 
 7. Run docker-compose to carry out the analysis in a reproducable way:
 
@@ -28,23 +28,9 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 8. The generated report will show up under `results/Spectral_type_classification_report.html` in the cloned repository, which you can open up by navigating to it in your file explorer and opening it with your browser by double clicking it. If that doesn't work, try right clicking, and selecting open with... and then select your preferred browser to open it in.
 
-# Contributing to the codebase
+## Contributing
 
-1. Clone our Repository from Github:
-   
-   `git clone https://github.com/DSCI-310-2024/DSCI-310-Group-16.git`
-
-2. Navigate to the Root of Your Project Directory:
-   
-   `cd DSCI-310-Group-16`
-   
-3. Create and activate our Environment from its YAML File:
-   
-   `conda env create --file environment.yml`
-   
-   `conda activate dsci-310-group16`
-   
-5. Execute desired edits on a separate branch and create a pull request.
+Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
 # Dependencies
 
