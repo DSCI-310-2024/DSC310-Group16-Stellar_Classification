@@ -1,5 +1,5 @@
 # start from the Jupyter scipy-notebook as a base
-FROM nginx:alpine
+FROM quay.io/jupyter/scipy-notebook:2024-02-24
 
 USER root
 
@@ -8,10 +8,6 @@ RUN conda install -c conda-forge -y python=3.11
 
 # install dependencies
 RUN pip install classifyspectraltype==0.2.0 \
-    matplotlib==3.8.3 \
-    pandas=2.2.0 \
-    pyarrow=15.0.1 \
-    jupyterlab=4.0.13 \
     pyarrow==15.0.1 \
     click==8.1.7
 
