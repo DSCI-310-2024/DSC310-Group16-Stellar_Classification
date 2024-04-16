@@ -11,7 +11,6 @@ RUN conda install -c conda-forge -y python=3.11 \
 RUN pip install classifyspectraltype==0.2.0 \
     pyarrow==15.0.1 \
     click==8.1.7
-    
 
 # create the directory /home/dsci
 RUN mkdir -p /home/dsci
