@@ -28,7 +28,7 @@ Our project looks towards the skies to classify stars to their given spectral ty
 
 8. The generated report will show up under `results/Spectral_type_classification_report.html` in the cloned repository, which you can open up by navigating to it in your file explorer and opening it with your browser by double clicking it. If that doesn't work, try right clicking, and selecting open with... and then select your preferred browser to open it in.
 
-## Contributing
+# Contributing
 
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
