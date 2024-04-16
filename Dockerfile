@@ -5,7 +5,7 @@ USER root
 
 # install packages python and quarto from conda forge channel
 RUN conda install -c conda-forge -y python=3.11 \
-    quarto=0.1.0
+    quarto=1.4.550
 
 # install dependencies
 RUN pip install classifyspectraltype==0.2.0 \
